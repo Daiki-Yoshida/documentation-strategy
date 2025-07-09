@@ -1,0 +1,21 @@
+# General
+.DS_Store
+.vscode/
+.idea/
+*.log
+*.tmp
+*~
+
+# Documentation build artifacts
+*.pdf
+*.html
+/build/
+/dist/
+
+# Local development
+.env
+.env.local
+
+# Platform specific
+Thumbs.db
+Desktop.ini
