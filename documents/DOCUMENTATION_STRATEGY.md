@@ -1,233 +1,200 @@
-# Universal Documentation Strategy for AI Agent-Driven Development
+# AI Agent Documentation Strategy
 
-This document outlines a comprehensive strategy for organizing and managing documentation in software projects where AI agents (e.g., Claude, Gemini, Copilot) are actively involved in development. The goal is to create a maintainable, efficient, and scalable documentation ecosystem that serves both human developers and automated agents effectively.
+## Overview
+
+This strategy focuses on creating documentation systems optimized for AI agent productivity and effectiveness in software development projects. Unlike traditional documentation approaches, this strategy prioritizes agent-centric information architecture while maintaining human accessibility.
 
 ## Core Principles
 
-### 1. Single Source of Truth
-- Avoid duplicating information across multiple files
-- Establish canonical locations for each type of information
-- Maintain clear information hierarchy and inheritance patterns
+### 1. Agent-First Design
+- Documentation structure optimized for AI agent cognitive patterns
+- Information density balanced with context window efficiency
+- Progressive disclosure aligned with agent reasoning capabilities
 
-### 2. Audience-Specific Content Separation
-- **Human-Oriented Documentation:** Focus on conceptual understanding, setup guidance, and contribution workflows
-- **Agent-Oriented Documentation:** Provide meta-instructions, workflow constraints, and operational guidance
+### 2. Operational Focus
+- Emphasis on actionable instructions over descriptive content
+- Clear decision trees and conditional logic for agent workflows
+- Explicit constraints and boundaries for autonomous operations
 
-### 3. Maintainability and Scalability
-- Design documentation structure to minimize update effort
-- Support both single-project and multi-project architectures
-- Enable efficient information propagation across project hierarchies
+### 3. Context Efficiency
+- Minimal context switching between information sources
+- Self-contained instruction sets where possible
+- Strategic cross-referencing to reduce redundancy
 
-### 4. Context-Aware Information Management
-- Respect AI agent context limitations through strategic information placement
-- Provide progressive disclosure of information complexity
-- Support multiple agent collaboration patterns
+### 4. Human-Agent Collaboration
+- Clear delineation of agent vs. human responsibilities
+- Handoff protocols between agents and human developers
+- Shared understanding frameworks for collaborative workflows
 
 ## Documentation Architecture
 
-### Hierarchical Information Structure
+### Information Hierarchy
 
-#### Root Level (`/`)
-- **Primary README.md:** Human-oriented project overview and quick start guide
-- **Agent Files (`<AGENT_NAME>.md`):** Top-level agent guidance with references to detailed documentation
-- **DOCUMENTATION_STRATEGY.md:** Meta-documentation management policy (optional, can be in documents/)
+#### Level 1: Agent Command Center (`AGENT_NAME.md`)
+**Purpose**: Primary operational hub for agent instructions
+**Location**: Project root and sub-project directories
+**Content Focus**:
+- Immediate operational context
+- Core workflow instructions
+- Essential constraints and permissions
+- Emergency procedures and escalation paths
 
-#### Documents Directory (`/documents/`)
-- **Detailed Technical Documentation:** Comprehensive project information, setup procedures, and development guidelines
-- **Architecture and design documents**
-- **Contribution guidelines and development workflows**
+#### Level 2: Reference Documentation (`/documents/`)
+**Purpose**: Comprehensive technical reference for complex operations
+**Location**: Centralized documents directory
+**Content Focus**:
+- Detailed technical specifications
+- Complex workflow procedures
+- Architecture documentation
+- Integration guidelines
 
-#### Sub-Project Level (`/project-name/`)
-- **Project-specific README.md:** Local setup and build instructions
-- **Agent Files (`<AGENT_NAME>.md`):** Project-specific agent guidance
-- **Local documentation:** Technical specifications and implementation details
+#### Level 3: Human Interface (`README.md`)
+**Purpose**: Human-readable project overview and agent status
+**Location**: Project root
+**Content Focus**:
+- Project mission and scope
+- Agent involvement and capabilities
+- Human developer onboarding
+- Documentation navigation
 
-## File Types and Content Guidelines
+### Agent-Specific Files Structure
 
-### 1. Primary README.md (Human-Oriented Entry Point)
+#### Primary Agent File (`CLAUDE.md`, `GEMINI.md`, etc.)
+```
+# Agent Identity and Scope
+- Role definition and responsibilities
+- Operational boundaries and constraints
+- Authority levels and escalation triggers
 
-**Purpose:** Serve as the initial contact point for human developers and provide essential project context.
+# Immediate Context
+- Current project status and priorities
+- Active development areas and restrictions
+- Recent decisions and their implications
 
-**Location:** Project root (`/README.md`)
+# Core Workflows
+- Primary development procedures
+- Testing and validation requirements
+- Code generation standards
+- Review and approval processes
 
-**Content Structure:**
-- **Project Overview:** Mission, problem statement, and value proposition
-- **Quick Start:** Minimal setup instructions to get running
-- **Architecture Summary:** High-level system design and component relationships
-- **Key Technologies:** Primary languages, frameworks, and tools
-- **Documentation Navigation:** Clear pointers to detailed documentation in `/documents/`
-- **Contribution Entry Points:** How to get involved and make contributions
+# Technical References
+- Links to detailed documentation
+- Architecture decision records
+- API specifications and constraints
+- Integration protocols
 
-### 2. Detailed Technical Documentation
-
-**Purpose:** Provide comprehensive technical information for human developers.
-
-**Location:** Documents directory (`/documents/PROJECT_INFO.md` or similar descriptive filename)
-
-**Content Structure:**
-- **Detailed Setup Instructions:** Environment preparation, dependencies, and configuration
-- **Build and Test Procedures:** Complete development workflow commands
-- **Coding Standards:** Detailed conventions, style guides, and best practices
-- **Architecture Deep Dive:** System design, patterns, and technical decisions
-- **Development Guidelines:** Branching strategy, review process, and quality standards
-- **Troubleshooting:** Common issues and resolution procedures
-
-### 3. Agent-Specific Documentation (`<AGENT_NAME>.md`)
-
-**Purpose:** Provide meta-instructions and operational guidance for AI agents.
-
-**Location:** Root and sub-project directories
-
-**Content Structure:**
-- **Agent Introduction:** Role definition and scope of responsibilities
-- **Reference Framework:** Explicit pointers to `/README.md` for overview and `/documents/` for detailed information
-- **Workflow Instructions:** Agent-specific development procedures and constraints
-- **Technical Constraints:** Known limitations, performance considerations, and operational boundaries
-- **Quality Assurance:** Code generation standards and validation procedures
-- **Integration Guidelines:** Collaboration patterns with other agents and human developers
-
-### 4. Documentation Strategy Document
-
-**Purpose:** Define and maintain the documentation management approach.
-
-**Location:** Documents directory (`/documents/DOCUMENTATION_STRATEGY.md`)
-
-**Content Structure:**
-- **Strategy Overview:** Documentation philosophy and organizational principles
-- **Implementation Guidelines:** Practical application of documentation standards
-- **Maintenance Procedures:** Update workflows and responsibility assignments
-- **Evolution Planning:** Adaptation strategies for changing project needs
+# Collaboration Protocols
+- Inter-agent communication patterns
+- Human developer handoff procedures
+- Conflict resolution mechanisms
+- Quality assurance checkpoints
+```
 
 ## Implementation Patterns
 
-### Single-Project Architecture
+### Single Agent Architecture
 ```
 /
-├── README.md (Human entry point)
-├── CLAUDE.md (Agent instructions → references documents/)
-├── GEMINI.md (Agent instructions → references documents/)
+├── CLAUDE.md (Primary agent hub)
+├── README.md (Human interface)
 ├── documents/
-│   ├── PROJECT_INFO.md (Comprehensive documentation)
-│   └── DOCUMENTATION_STRATEGY.md (Meta-documentation)
-└── [source code directories]
+│   ├── TECHNICAL_SPECS.md
+│   ├── WORKFLOWS.md
+│   └── ARCHITECTURE.md
+└── [source code]
 ```
 
-### Multi-Project Architecture
+### Multi-Agent Architecture
 ```
 /
-├── README.md (Workspace overview)
-├── CLAUDE.md (Global agent instructions → references documents/)
+├── CLAUDE.md (Primary development agent)
+├── GEMINI.md (Review and analysis agent)
+├── COPILOT.md (Code assistance agent)
+├── README.md (Human interface)
 ├── documents/
-│   ├── WORKSPACE_INFO.md (Workspace documentation)
-│   └── DOCUMENTATION_STRATEGY.md (Universal strategy)
+│   ├── AGENT_COORDINATION.md
+│   ├── TECHNICAL_SPECS.md
+│   └── WORKFLOWS.md
+└── [source code]
+```
+
+### Hierarchical Project Architecture
+```
+/
+├── CLAUDE.md (Global coordination)
+├── documents/
+│   ├── GLOBAL_STRATEGY.md
+│   └── AGENT_COORDINATION.md
 ├── project-a/
-│   ├── README.md (Project-specific overview)
-│   ├── CLAUDE.md (Local agent instructions → references documents/)
-│   ├── documents/
-│   │   └── PROJECT_INFO.md (Project-specific documentation)
-│   └── [source code]
+│   ├── CLAUDE.md (Local operations)
+│   └── documents/
+│       └── LOCAL_SPECS.md
 └── project-b/
-    ├── README.md (Project-specific overview)
-    ├── CLAUDE.md (Local agent instructions → references documents/)
-    ├── documents/
-    │   └── PROJECT_INFO.md (Project-specific documentation)
-    └── [source code]
+    ├── CLAUDE.md (Local operations)
+    └── documents/
+        └── LOCAL_SPECS.md
 ```
 
-### Workspace/Monorepo Architecture
-```
-/
-├── README.md (Workspace overview)
-├── CLAUDE.md (Global agent instructions → references documents/)
-├── documents/
-│   ├── WORKSPACE_INFO.md (Workspace documentation)
-│   ├── DOCUMENTATION_STRATEGY.md (Universal strategy)
-│   └── [shared documentation]
-├── packages/
-│   ├── core/
-│   │   ├── README.md (Package overview)
-│   │   ├── CLAUDE.md (Package-specific instructions → references documents/)
-│   │   └── documents/
-│   │       └── PACKAGE_INFO.md (Package documentation)
-│   └── ui/
-│       ├── README.md (Package overview)
-│       ├── CLAUDE.md (Package-specific instructions → references documents/)
-│       └── documents/
-│           └── PACKAGE_INFO.md (Package documentation)
-```
+## Agent Workflow Integration
 
-## Agent-Specific Considerations
-
-### Context Management
-- **Information Density:** Balance comprehensive guidance with context efficiency
-- **Progressive Disclosure:** Layer information from essential to detailed
-- **Reference Optimization:** Minimize redundant information through strategic cross-referencing
-
-### Multi-Agent Collaboration
-- **Role Clarity:** Define clear responsibilities and boundaries for each agent
-- **Information Sharing:** Establish protocols for agent-to-agent communication
-- **Conflict Resolution:** Provide guidance for handling contradictory instructions
-
-### Workflow Integration
-- **Development Lifecycle:** Integrate documentation into standard development workflows
-- **Quality Assurance:** Establish validation procedures for agent-generated content
-- **Continuous Improvement:** Create feedback loops for documentation effectiveness
-
-## Implementation Guidelines
-
-### Phase 1: Foundation Setup
-1. **Establish core documentation structure** following the architectural patterns
-2. **Create initial README.md files** for human developers
-3. **Implement basic agent instruction files** with essential workflow guidance
-
-### Phase 2: Content Development
-1. **Populate comprehensive technical documentation** in `/documents/PROJECT_INFO.md` or similar descriptive files
-2. **Develop detailed agent instructions** with explicit references to `/README.md` and `/documents/` content
-3. **Establish cross-reference patterns** between documentation files with consistent reference structure
-
-### Phase 3: Optimization and Refinement
-1. **Optimize for agent context efficiency** through strategic information placement
-2. **Validate documentation effectiveness** through agent interaction testing
-3. **Implement continuous improvement processes** for documentation maintenance
-
-### Phase 4: Scaling and Evolution
-1. **Adapt structure for project growth** and changing requirements
-2. **Integrate advanced agent collaboration patterns** as needed
-3. **Establish documentation governance** for long-term sustainability
-
-## Multi-Project Information Management
-
-### Information Hierarchy Rules
-- **Parent Level:** Global architecture, shared standards, cross-project dependencies, unified build/release processes
-- **Child Level:** Project-specific features, local configurations, API specifications, implementation details
-- **Minimal Reference Principle:** Child projects reference only essential parent information (coding standards, build commands)
-- **Override Rule:** Child-specific information overrides parent when explicitly documented
-
-### Duplication Avoidance
-- **Single Source Principle:** Each information type has one canonical location
-- **Selective Inheritance:** Child projects inherit only necessary parent information via explicit, targeted references
-- **Scoped Access:** `[Coding standards](../documents/WORKSPACE_INFO.md#coding-standards)` format for specific sections only
-
-### Agent Access Optimization
-- **Context-Efficient:** Essential information in agent files, minimal external references
-- **Self-Contained:** Child project agent files contain all necessary information without requiring parent traversal
-- **Emergency Reference:** Parent information referenced only when child-specific information is insufficient
-
-## Maintenance and Evolution
-
-### Review Cycles
-- **Monthly:** Agent instruction effectiveness
-- **Quarterly:** Architecture optimization
-- **Annually:** Strategy evolution
+### Development Lifecycle
+1. **Context Acquisition**: Agent reads primary instruction file
+2. **Task Analysis**: Agent evaluates requirements against constraints
+3. **Reference Consultation**: Agent accesses detailed documentation as needed
+4. **Implementation**: Agent executes within defined boundaries
+5. **Validation**: Agent follows testing and review protocols
+6. **Documentation Update**: Agent updates relevant documentation
 
 ### Quality Assurance
-- **Consistency:** Information alignment across hierarchy
-- **Accessibility:** Human and agent audience effectiveness
-- **Performance:** Development velocity impact
+- Automated validation of agent-generated content
+- Human review triggers for significant changes
+- Continuous improvement based on agent performance metrics
+- Documentation effectiveness monitoring
 
-### Continuous Improvement
-- **Feedback Integration:** Human and agent insights
-- **Best Practice Evolution:** Emerging pattern adaptation
-- **Community Contribution:** Collaborative standard improvement
+### Collaboration Patterns
+- Agent-to-agent communication protocols
+- Human oversight and intervention procedures
+- Conflict resolution and decision-making frameworks
+- Knowledge sharing and learning mechanisms
 
-This universal strategy provides a foundation for effective documentation management in AI agent-driven development environments, supporting projects of varying complexity and organizational structures.
+## Best Practices
+
+### Information Design
+- Use imperative language for agent instructions
+- Provide explicit decision criteria and branching logic
+- Include failure modes and recovery procedures
+- Maintain version control for instruction updates
+
+### Context Management
+- Prioritize essential information in agent files
+- Use progressive disclosure for complex procedures
+- Minimize cognitive load through clear information hierarchy
+- Optimize for agent context window limitations
+
+### Maintenance and Evolution
+- Regular review and optimization of agent instructions
+- Performance monitoring and improvement cycles
+- Adaptation to changing project requirements
+- Integration of lessons learned and best practices
+
+## Success Metrics
+
+### Agent Effectiveness
+- Task completion rates and accuracy
+- Context switching frequency
+- Error rates and recovery success
+- Autonomous operation duration
+
+### Human Collaboration
+- Handoff success rates
+- Review efficiency and quality
+- Developer satisfaction with agent output
+- Documentation usability and clarity
+
+### System Performance
+- Documentation maintenance overhead
+- Information retrieval efficiency
+- Knowledge transfer effectiveness
+- Adaptation speed to project changes
+
+This strategy provides a foundation for creating documentation systems that maximize AI agent productivity while maintaining effective human-agent collaboration in software development projects.

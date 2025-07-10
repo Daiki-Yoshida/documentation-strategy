@@ -18,7 +18,6 @@ This strategy provides a structured approach to organizing and managing document
 
 ### Core Strategy Documents
 - **[DOCUMENTATION_STRATEGY.md](./DOCUMENTATION_STRATEGY.md)** - Complete strategy specification (English)
-- **[DOCUMENTATION_STRATEGY_ja.md](./DOCUMENTATION_STRATEGY_ja.md)** - Complete strategy specification (Japanese)
 
 ### Implementation Examples
 - **[examples/single-project/](./examples/single-project/)** - Single project implementation
