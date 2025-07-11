@@ -38,26 +38,45 @@ project/
 
 ## 使用方法
 
-### 1. 基本セットアップ
+### 1. Git Submodule を使用した戦略参照（推奨）
 ```bash
-# プロジェクトルートに AI エージェント用ファイルを配置
-cp examples/single-project/CLAUDE.md ./
-cp examples/single-project/GEMINI.md ./
+# 既存のプロジェクトに戦略を追加
+git submodule add https://github.com/username/documentation-strategy.git docs/ai-strategy
 
-# documents ディレクトリを作成
-mkdir documents
-cp examples/single-project/documents/PROJECT.md ./documents/
+# 初期化
+git submodule update --init --recursive
+
+# AI エージェントに以下のように命令して CLAUDE.md を作成
+# "docs/ai-strategy/documents/AI_DOC_STRATEGY.md を元に、このプロジェクト用の CLAUDE.md を作成してください"
 ```
 
-### 2. 階層プロジェクトの場合
+### 2. 基本セットアップ（AI エージェント作成方式）
 ```bash
-# 親プロジェクトのセットアップ
-cp examples/multi-project/CLAUDE.md ./
-cp examples/multi-project/documents/children.md ./documents/
+# 戦略ファイルをダウンロード
+curl -O https://raw.githubusercontent.com/username/documentation-strategy/main/documents/AI_DOC_STRATEGY.md
+
+# AI エージェントに以下のように命令
+# "AI_DOC_STRATEGY.md を元に、このプロジェクト用の CLAUDE.md と GEMINI.md を作成してください"
+# "AI_DOC_STRATEGY.md を元に、documents/PROJECT.md を作成してください"
+```
+
+### 3. 階層プロジェクトの場合
+```bash
+# 親プロジェクトで AI エージェントに命令
+# "AI_DOC_STRATEGY.md を元に、階層プロジェクト用の CLAUDE.md を作成してください"
+# "documents/children.md を作成して、子プロジェクトの管理方法を定義してください"
 
 # 子プロジェクトは独立して管理
 cd child-service/
-cp ../examples/multi-project/UserService/CLAUDE.md ./
+# "AI_DOC_STRATEGY.md を元に、この子プロジェクト用の CLAUDE.md を作成してください"
+```
+
+### 4. Submodule の更新
+```bash
+# 戦略の最新版を取得
+git submodule update --remote docs/ai-strategy
+git add docs/ai-strategy
+git commit -m "Update AI documentation strategy"
 ```
 
 ## 実装例
