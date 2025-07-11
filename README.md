@@ -1,109 +1,88 @@
-# Universal Documentation Strategy for AI Agent-Driven Development
+# AI エージェント向けドキュメント戦略
 
-A comprehensive documentation strategy framework designed for software projects where AI agents (Claude, Gemini, Copilot) are actively involved in development.
+## 概要
 
-## Overview
+このプロジェクトは、AI エージェント（Claude、Gemini など）の効率的な作業を支援するためのドキュメント戦略を定義しています。従来の人間向けドキュメントとは異なり、AI エージェントの特性（トークン制限、認知負荷、処理効率）に最適化されたドキュメント構造を提案します。
 
-This strategy provides a structured approach to organizing and managing documentation that serves both human developers and AI agents effectively. It addresses the unique challenges of AI-driven development while maintaining traditional documentation best practices.
+## 主要な特徴
 
-## Key Features
+### 🎯 AI エージェント最適化
+- **トークン効率**: 人間の可読性よりもトークン最適化を優先
+- **認知負荷軽減**: AI エージェントが迷わない明確な情報ルーティング
+- **処理効率**: AI が最高速度で解析できる構造化フォーマット
 
-- **Audience-Specific Design**: Separate documentation for humans and AI agents
-- **Context-Aware Information Management**: Optimized for AI agent context limitations
-- **Scalable Architecture**: Supports single projects, multi-project workspaces, and monorepos
-- **Minimal Reference Principle**: Reduces unnecessary information traversal
-- **Multi-Agent Collaboration**: Guidelines for multiple AI agents working together
+### 🏗️ スケールに依存しない設計
+- **単一プロジェクト**: シンプルなプロジェクト構造に対応
+- **階層プロジェクト**: 複雑なマルチサービス環境に対応
+- **OOP 設計**: 親子関係の明確な分離とカプセル化
 
-## Documentation Files
+### 📄 標準化されたファイル構造
+- **CLAUDE.md / GEMINI.md**: AI エージェントのエントリーポイント (≤200 トークン)
+- **PROJECT.md**: プロジェクト詳細とルーティング (≤800 トークン)
+- **documents/**: 詳細な仕様とコンテキスト情報
 
-### Core Strategy Documents
-- **[DOCUMENTATION_STRATEGY.md](./DOCUMENTATION_STRATEGY.md)** - Complete strategy specification (English)
+## ファイル構造
 
-### Implementation Examples
-- **[examples/single-project/](./examples/single-project/)** - Single project implementation
-- **[examples/multi-project/](./examples/multi-project/)** - Multi-project workspace implementation
-- **[examples/workspace/](./examples/workspace/)** - Monorepo/workspace implementation
-
-## Quick Start
-
-### 1. Choose Your Architecture Pattern
-- **Single Project**: Simple projects with unified codebase
-- **Multi-Project**: Independent projects with shared standards
-- **Workspace/Monorepo**: Packages with hierarchical dependencies
-
-### 2. Implement Core Structure
 ```
-/
-├── README.md (Human entry point)
-├── CLAUDE.md (AI agent instructions)
+project/
+├── CLAUDE.md              # Claude エージェント向け指示書
+├── GEMINI.md              # Gemini エージェント向け指示書
+├── README.md              # 人間向けインターフェース
 ├── documents/
-│   └── PROJECT_INFO.md (Detailed documentation)
+│   ├── PROJECT.md         # プロジェクト詳細とルーティング
+│   ├── context.md         # コンテキスト情報
+│   ├── workflows.md       # ワークフロー定義
+│   └── specs.md           # 仕様書
+└── src/                   # ソースコード
 ```
 
-### 3. Follow Information Hierarchy Rules
-- **Parent Level**: Global architecture, shared standards, dependencies
-- **Child Level**: Project-specific features, local configurations
-- **Minimal Reference**: Only essential cross-references
+## 使用方法
 
-## Key Principles
+### 1. 基本セットアップ
+```bash
+# プロジェクトルートに AI エージェント用ファイルを配置
+cp examples/single-project/CLAUDE.md ./
+cp examples/single-project/GEMINI.md ./
 
-### Single Source of Truth
-- Avoid information duplication
-- Establish canonical locations for each information type
-- Maintain clear information hierarchy
+# documents ディレクトリを作成
+mkdir documents
+cp examples/single-project/documents/PROJECT.md ./documents/
+```
 
-### Context Efficiency
-- Essential information in agent files
-- Minimal external references
-- Self-contained child project documentation
+### 2. 階層プロジェクトの場合
+```bash
+# 親プロジェクトのセットアップ
+cp examples/multi-project/CLAUDE.md ./
+cp examples/multi-project/documents/children.md ./documents/
 
-### Progressive Disclosure
-- Agent → README → documents/INFO → implementations
-- Layered information access
-- Targeted section references
+# 子プロジェクトは独立して管理
+cd child-service/
+cp ../examples/multi-project/UserService/CLAUDE.md ./
+```
 
-## Integration Guide
+## 実装例
 
-### For New Projects
-1. Copy the appropriate example structure
-2. Customize agent instructions for your technology stack
-3. Populate documentation following the content guidelines
+### TypeScript プロジェクト
+`examples/single-project/` には、Express.js と TypeScript を使用した API プロジェクトの実装例があります。
 
-### For Existing Projects
-1. Assess current documentation structure
-2. Migrate content following the hierarchy rules
-3. Update agent instructions to reference new structure
+### C# マイクロサービス
+`examples/multi-project/` には、.NET Core を使用した階層プロジェクトの実装例があります。
 
-## Maintenance
+## 戦略の詳細
 
-### Regular Review Cycles
-- **Monthly**: Agent instruction effectiveness
-- **Quarterly**: Architecture optimization
-- **Annually**: Strategy evolution
+完全な戦略仕様については、`documents/AI_DOC_STRATEGY.md` を参照してください。
 
-### Quality Assurance
-- Information consistency across hierarchy
-- Agent and human audience effectiveness
-- Development velocity impact monitoring
+## 利用について
 
-## License
+このプロジェクトは個人の研究・実装プロジェクトです。商業利用を含め、自由に改変・利用していただけます。すべて自己責任でお願いします。
 
-This documentation strategy is released under the MIT License. Feel free to adapt and use in your projects.
+もしよろしければ、どこかにクレジットを記載していただけると嬉しいです。
 
-## Contributing
+## ライセンス
 
-This strategy is designed to evolve with AI agent development practices. Contributions and improvements are welcome through:
-- Issue reports for unclear guidance
-- Pull requests for strategy enhancements
-- Examples of successful implementations
+MIT License - 詳細は `LICENSE` ファイルを参照してください。
 
-## Future Roadmap
+## 関連リンク
 
-- Enhanced multi-agent collaboration patterns
-- Integration with popular development tools
-- Automated documentation consistency checking
-- Community-driven best practices collection
-
----
-
-*This documentation strategy provides a foundation for effective documentation management in AI agent-driven development environments, supporting projects of varying complexity and organizational structures.*
+- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [Google Gemini API Documentation](https://developers.google.com/gemini)

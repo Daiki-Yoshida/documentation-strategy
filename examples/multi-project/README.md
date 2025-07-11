@@ -1,238 +1,91 @@
-# Multi-Project Implementation Example
+# E-Commerce Microservices Solution
 
-This example demonstrates how to implement the Universal Documentation Strategy for multi-project workspaces.
+A scalable e-commerce platform built with .NET 8, implementing microservices architecture with clean architecture patterns.
 
-## Project Structure
+## Solution Overview
 
-```
-/
-├── README.md (Workspace overview)
-├── CLAUDE.md (Global agent instructions)
-├── documents/
-│   ├── WORKSPACE_INFO.md (Workspace documentation)
-│   └── DOCUMENTATION_STRATEGY.md (Reference to this strategy)
-├── project-a/
-│   ├── README.md (Project-specific overview)
-│   ├── CLAUDE.md (Local agent instructions)
-│   ├── documents/
-│   │   └── PROJECT_INFO.md (Project-specific documentation)
-│   └── src/
-└── project-b/
-    ├── README.md (Project-specific overview)
-    ├── CLAUDE.md (Local agent instructions)
-    ├── documents/
-    │   └── PROJECT_INFO.md (Project-specific documentation)
-    └── src/
-```
-
-## Implementation Steps
-
-### 1. Create Root README.md (Workspace Overview)
-```markdown
-# Workspace Name
-
-Multi-project workspace description and purpose.
-
-## Projects Overview
-- **project-a**: Brief description and purpose
-- **project-b**: Brief description and purpose
-
-## Quick Start
-- Prerequisites for entire workspace
-- Setup instructions
-- Build all projects
+This solution consists of multiple microservices handling different business domains:
+- **User Service**: Authentication, user management, profiles
+- **Product Service**: Product catalog, inventory management
+- **Order Service**: Order processing, payment integration
+- **Shared Libraries**: Common utilities, domain models
 
 ## Architecture
-- Overall system design
-- Project relationships
-- Shared components
 
-## Documentation
-- [Workspace Documentation](./documents/WORKSPACE_INFO.md)
-- [Project A Documentation](./project-a/README.md)
-- [Project B Documentation](./project-b/README.md)
-```
+- **Framework**: .NET 8
+- **Architecture**: Clean Architecture + Domain-Driven Design
+- **Communication**: HTTP REST + Message Queues (RabbitMQ)
+- **Database**: SQL Server + Redis Cache
+- **API Gateway**: Ocelot
+- **Authentication**: JWT Bearer tokens
+- **Monitoring**: Serilog + Application Insights
 
-### 2. Create Root CLAUDE.md (Global Agent Instructions)
-```markdown
-# CLAUDE.md
+## Prerequisites
 
-This file guides Claude when working with this multi-project workspace.
-
-For workspace-wide information, refer to [documents/WORKSPACE_INFO.md](./documents/WORKSPACE_INFO.md).
-
-## Workspace-Level Instructions
-
-- **Shared Standards**: [documents/WORKSPACE_INFO.md#coding-standards](./documents/WORKSPACE_INFO.md#coding-standards)
-- **Build System**: [documents/WORKSPACE_INFO.md#build-system](./documents/WORKSPACE_INFO.md#build-system)
-- **Cross-Project Dependencies**: [documents/WORKSPACE_INFO.md#dependencies](./documents/WORKSPACE_INFO.md#dependencies)
-
-## Project-Specific Work
-
-When working on specific projects:
-- Refer to project-specific CLAUDE.md files
-- Follow project-specific constraints and patterns
-- Consider cross-project impact
-
-## Known Limitations
-
-- Workspace-level constraints
-- Cross-project dependency considerations
-- Shared resource limitations
-```
-
-### 3. Create documents/WORKSPACE_INFO.md (Workspace Documentation)
-```markdown
-# Workspace Technical Documentation
-
-## Architecture Overview
-- System-wide design principles
-- Project relationships and dependencies
-- Shared components and libraries
-
-## Coding Standards
-- Unified coding conventions across projects
-- Shared style guidelines
-- Common patterns and practices
-
-## Build System
-- Workspace-level build configuration
-- Cross-project build dependencies
-- Release and deployment procedures
-
-## Dependencies
-- Shared dependencies management
-- Version synchronization
-- Dependency resolution strategies
-
-## Development Environment
-- Workspace setup procedures
-- Common development tools
-- Environment configuration
-
-## Cross-Project Guidelines
-- Inter-project communication patterns
-- Shared API conventions
-- Data sharing protocols
-
-## Testing Strategy
-- Workspace-level testing approach
-- Integration testing procedures
-- Cross-project test coordination
-```
-
-### 4. Create Project-Specific Documentation
-
-#### project-a/README.md
-```markdown
-# Project A
-
-Project-specific overview and quick start.
-
-## Purpose
-- Project A's specific role in the workspace
-- Key features and capabilities
+- .NET 8 SDK
+- SQL Server 2022 (or SQL Server Express)
+- Redis
+- RabbitMQ
+- Visual Studio 2022 or VS Code
 
 ## Quick Start
-- Project-specific setup
-- Local development
-- Testing procedures
 
-## Architecture
-- Project-specific design
-- Internal components
-- External dependencies
+1. **Clone and Setup**
+   ```bash
+   git clone <repository-url>
+   cd ecommerce-microservices
+   ```
 
-## Documentation
-- [Detailed Documentation](./documents/PROJECT_INFO.md)
-- [Workspace Documentation](../documents/WORKSPACE_INFO.md)
-```
+2. **Database Setup**
+   ```bash
+   dotnet ef database update --project UserService/src/UserService.Infrastructure
+   dotnet ef database update --project ProductService/src/ProductService.Infrastructure
+   dotnet ef database update --project OrderService/src/OrderService.Infrastructure
+   ```
 
-#### project-a/CLAUDE.md
-```markdown
-# Project A - CLAUDE.md
+3. **Start Services**
+   ```bash
+   # Start all services
+   dotnet run --project ApiGateway/src/ApiGateway.API
+   dotnet run --project UserService/src/UserService.API
+   dotnet run --project ProductService/src/ProductService.API
+   dotnet run --project OrderService/src/OrderService.API
+   ```
 
-This file guides Claude when working specifically with Project A.
+## Development Guidelines
 
-## Essential Information
-- **Project Role**: Core business logic implementation
-- **Key Technologies**: [List specific to this project]
-- **Build Commands**: `npm run build` (project-specific)
-
-## Reference Information
-- **Workspace Standards**: [../documents/WORKSPACE_INFO.md#coding-standards](../documents/WORKSPACE_INFO.md#coding-standards)
-- **Project Details**: [documents/PROJECT_INFO.md](./documents/PROJECT_INFO.md)
-
-## Project-Specific Constraints
-- Performance requirements
-- Memory limitations
-- Integration requirements with Project B
-
-## Quality Assurance
-- Project-specific code generation standards
-- Local testing requirements
-- Integration testing considerations
-```
-
-#### project-a/documents/PROJECT_INFO.md
-```markdown
-# Project A Technical Documentation
-
-## Project Architecture
-- Internal component design
-- Data flow and processing
-- Service interfaces
-
-## Implementation Details
-- Key algorithms and logic
-- Database schema (if applicable)
-- API specifications
-
-## Dependencies
-- External libraries
-- Workspace dependencies
-- System requirements
+1. Follow Clean Architecture principles
+2. Implement proper error handling and logging
+3. Write comprehensive unit and integration tests
+4. Use dependency injection consistently
+5. Implement proper API versioning
+6. Follow REST API best practices
 
 ## Testing
-- Unit testing strategy
-- Integration testing
-- Performance testing
 
-## Deployment
-- Build artifacts
-- Deployment procedures
-- Environment configuration
+```bash
+# Run all tests
+dotnet test
+
+# Run tests with coverage
+dotnet test --collect:"XPlat Code Coverage"
+
+# Run specific service tests
+dotnet test UserService/tests/
+dotnet test ProductService/tests/
+dotnet test OrderService/tests/
 ```
 
-## Information Hierarchy Rules
+## Contributing
 
-### Parent Level (Workspace)
-- Global architecture and design principles
-- Shared coding standards and conventions
-- Cross-project dependencies and relationships
-- Unified build and release processes
+1. Create feature branches from `develop`
+2. Follow naming convention: `feature/service-name/feature-description`
+3. Ensure all tests pass
+4. Update relevant documentation
+5. Submit pull request to `develop`
 
-### Child Level (Projects)
-- Project-specific features and implementations
-- Local development and testing procedures
-- Internal architecture and design decisions
-- Project-specific API and interfaces
+## Contact
 
-### Minimal Reference Pattern
-- Child projects reference only essential parent information
-- Specific section references: `[Standards](../documents/WORKSPACE_INFO.md#coding-standards)`
-- Self-contained project documentation when possible
-
-## Benefits of This Structure
-
-- **Clear Separation**: Workspace and project concerns are distinct
-- **Context Efficient**: AI agents access minimal necessary information
-- **Maintainable**: Single source of truth for each information type
-- **Scalable**: Easy to add new projects to workspace
-
-## Customization Guidelines
-
-- Adapt workspace-level standards to your technology stack
-- Define clear project boundaries and responsibilities
-- Maintain consistent referencing patterns across projects
-- Regular review of cross-project dependencies and standards
+Architecture Team: architecture@company.com  
+DevOps Team: devops@company.com  
+Slack: #ecommerce-microservices

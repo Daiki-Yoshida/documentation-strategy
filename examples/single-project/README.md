@@ -1,151 +1,67 @@
-# Single Project Implementation Example
+# User Management API
 
-This example demonstrates how to implement the Universal Documentation Strategy for a single project.
+A secure and high-performance user management system backend API built with TypeScript, Express, and PostgreSQL.
 
-## Project Structure
+## Project Overview
 
-```
-/
-├── README.md (Human entry point)
-├── CLAUDE.md (AI agent instructions)
-├── GEMINI.md (AI agent instructions)
-├── documents/
-│   ├── PROJECT_INFO.md (Comprehensive documentation)
-│   └── DOCUMENTATION_STRATEGY.md (Reference to this strategy)
-├── src/
-│   └── [source code]
-└── tests/
-    └── [test files]
-```
-
-## Implementation Steps
-
-### 1. Create README.md (Human Entry Point)
-```markdown
-# Project Name
-
-Brief project description and value proposition.
-
-## Quick Start
-- Prerequisites
-- Installation steps
-- Basic usage
-
-## Architecture
-- High-level system design
-- Key components
-- Technology stack
-
-## Documentation
-- [Detailed Documentation](./documents/PROJECT_INFO.md)
-- [Contributing Guide](./documents/PROJECT_INFO.md#contributing)
-
-## Getting Help
-- Issue tracker
-- Community resources
-```
-
-### 2. Create CLAUDE.md (AI Agent Instructions)
-```markdown
-# CLAUDE.md
-
-This file guides Claude when working with this project.
-
-For general project information, setup instructions, and coding conventions, refer to [documents/PROJECT_INFO.md](./documents/PROJECT_INFO.md).
-
-## Agent-Specific Workflow Instructions
-
-- Use project-specific coding standards from [documents/PROJECT_INFO.md#coding-standards](./documents/PROJECT_INFO.md#coding-standards)
-- Build commands: [documents/PROJECT_INFO.md#build-commands](./documents/PROJECT_INFO.md#build-commands)
-- Testing procedures: [documents/PROJECT_INFO.md#testing](./documents/PROJECT_INFO.md#testing)
-
-## Known Limitations
-
-- Specific constraints for this project
-- Performance considerations
-- External dependencies
-
-## Quality Assurance
-
-- Code generation must follow established patterns
-- All generated code must include appropriate tests
-- Documentation updates required for new features
-```
-
-### 3. Create documents/PROJECT_INFO.md (Comprehensive Documentation)
-```markdown
-# Project Technical Documentation
+This project provides a comprehensive user management solution with OAuth2.0 authentication, role-based access control, and RESTful API design following OpenAPI specifications.
 
 ## Setup Instructions
-- Environment preparation
-- Dependencies installation
-- Configuration steps
 
-## Build Commands
-- Development build
-- Production build
-- Testing commands
+1. **Prerequisites**
+   - Node.js 18+ 
+   - PostgreSQL 14+
+   - npm or yarn
 
-## Coding Standards
-- Code style guidelines
-- Naming conventions
-- Best practices
+2. **Installation**
+   ```bash
+   npm install
+   ```
 
-## Architecture Deep Dive
-- System design details
-- Component interactions
-- Data flow
+3. **Environment Setup**
+   - Copy `.env.example` to `.env`
+   - Configure database connection
+   - Set OAuth2.0 credentials
 
-## API Documentation
-- Endpoint specifications
-- Request/response formats
-- Authentication
+4. **Database Setup**
+   ```bash
+   npm run db:migrate
+   npm run db:seed
+   ```
+
+5. **Development Server**
+   ```bash
+   npm run dev
+   ```
 
 ## Testing
-- Testing strategy
-- Test execution
-- Coverage requirements
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run integration tests
+npm run test:integration
+```
+
+## API Documentation
+
+- OpenAPI specification: `/api/docs`
+- Postman collection: `docs/postman-collection.json`
 
 ## Contributing
-- Development workflow
-- Pull request process
-- Code review guidelines
 
-## Troubleshooting
-- Common issues
-- Debugging procedures
-- Support resources
-```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and ensure coverage ≥80%
+5. Submit a pull request
 
-### 4. Create documents/DOCUMENTATION_STRATEGY.md (Strategy Reference)
-```markdown
-# Documentation Strategy
+## Contact
 
-This project follows the [Universal Documentation Strategy for AI Agent-Driven Development](../../DOCUMENTATION_STRATEGY.md).
-
-## Key Principles Applied
-
-- **Single Source of Truth**: Technical details in PROJECT_INFO.md
-- **Audience Separation**: README.md for humans, CLAUDE.md for agents
-- **Context Efficiency**: Essential information in agent files
-
-## Maintenance
-
-- Review agent instructions monthly
-- Update technical documentation as needed
-- Ensure consistency across all documentation files
-```
-
-## Benefits of This Structure
-
-- **Clear Separation**: Human and AI agent documentation are distinct
-- **Context Efficient**: AI agents get essential information without excess
-- **Maintainable**: Single source of truth for technical details
-- **Scalable**: Easy to extend as project grows
-
-## Customization Guidelines
-
-- Adapt agent instructions to your specific technology stack
-- Include project-specific constraints and limitations
-- Maintain consistent referencing patterns
-- Regular review and updates based on usage patterns
+Project Lead: [Your Name]
+Email: [your.email@company.com]
+Slack: #user-management-api
