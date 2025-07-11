@@ -41,23 +41,22 @@ project/
 ### 1. Git Submodule を使用した戦略参照（推奨）
 ```bash
 # 既存のプロジェクトに戦略を追加
-git submodule add https://github.com/username/documentation-strategy.git docs/ai-strategy
+git submodule add https://github.com/Daiki-Yoshida/documentation-strategy.git documentation-strategy
 
 # 初期化
 git submodule update --init --recursive
 
 # AI エージェントに以下のように命令して CLAUDE.md を作成
-# "docs/ai-strategy/documents/AI_DOC_STRATEGY.md を元に、このプロジェクト用の CLAUDE.md を作成してください"
+# "documentation-strategy/AI_DOC_STRATEGY.md を元に、このプロジェクト用の CLAUDE.md と PROJECT.md を作成してください"
 ```
 
 ### 2. 基本セットアップ（AI エージェント作成方式）
 ```bash
 # 戦略ファイルをダウンロード
-curl -O https://raw.githubusercontent.com/username/documentation-strategy/main/documents/AI_DOC_STRATEGY.md
+curl -O https://raw.githubusercontent.com/Daiki-Yoshida/documentation-strategy/main/documents/AI_DOC_STRATEGY.md
 
 # AI エージェントに以下のように命令
-# "AI_DOC_STRATEGY.md を元に、このプロジェクト用の CLAUDE.md と GEMINI.md を作成してください"
-# "AI_DOC_STRATEGY.md を元に、documents/PROJECT.md を作成してください"
+# "AI_DOC_STRATEGY.md を元に、このプロジェクト用の CLAUDE.md と PROJECT.md を作成してください"
 ```
 
 ### 3. 階層プロジェクトの場合
