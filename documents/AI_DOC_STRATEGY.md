@@ -24,16 +24,29 @@ universality:
 ```yaml
 project_structure:
   root_files:
-    - "CLAUDE.md"      # ≤200 tokens
-    - "GEMINI.md"      # ≤200 tokens  
-    - "README.md"      # human-only
+    - "CLAUDE.md"      # ≤200 tokens (AI entry point)
+    - "GEMINI.md"      # ≤200 tokens (AI entry point)
+    - "README.md"      # human interface only
   documents:
-    - "PROJECT.md"     # ≤800 tokens
-    - "context.md"     # example
-    - "workflows.md"   # example
-    - "specs.md"       # example
-    - "[project_specific_files]"
+    root_shared: "shared resources and specifications"
+    agents_directory: "documents/agents/ (AI-specific, English, no suffix)"
+    users_directory: "documents/users/ (human-specific, Japanese, _JP.md suffix)"
   source_code: true
+
+directory_structure:
+  "documents/":
+    purpose: "shared resources between AI and humans"
+    content: "specifications, schemas, shared documentation"
+  "documents/agents/":
+    purpose: "AI-optimized documentation"
+    language: "English"
+    naming: "filename.md (no language suffix)"
+    optimization: "token efficiency priority"
+  "documents/users/":
+    purpose: "human-readable documentation"  
+    language: "Japanese (primary target)"
+    naming: "filename_JP.md (Japanese suffix required)"
+    optimization: "comprehensibility priority"
 ```
 
 ## Hierarchical Projects (OOP Design)
@@ -50,14 +63,22 @@ hierarchy_principles:
 structure:
   parent_project:
     files: ["CLAUDE.md", "GEMINI.md", "README.md"]
-    documents: 
-      - "PROJECT.md"
-      - "children.md (child project list and management)"
-    child_projects:
-      - independent_management: "complete independence"
-      - parent_awareness: false
-      - documents: ["PROJECT.md (parent unaware)"]
-      - external_reference: "treat parent as external project if needed"
+    documents:
+      shared_root: "documents/ (shared specifications)"
+      agents_directory: "documents/agents/ (parent project AI docs)"
+      users_directory: "documents/users/ (parent project human docs)"
+      child_management: "documents/agents/children.md (child project coordination)"
+  
+  child_projects:
+    independence: "complete independence without parent knowledge"
+    structure:
+      files: ["CLAUDE.md", "GEMINI.md", "README.md"] 
+      documents:
+        shared_root: "documents/ (child-specific shared specs)"
+        agents_directory: "documents/agents/ (child AI docs, parent unaware)"
+        users_directory: "documents/users/ (child human docs, parent unaware)"
+    parent_awareness: false
+    external_reference: "treat parent as external project if coordination needed"
 ```
 
 ## File Format Standards
@@ -129,25 +150,43 @@ README_md:
 
 ```yaml
 documents_principles:
-  PROJECT_md: "required (description + routing)"
-  other_files: "project-specific and unique"
-  example_files: "context.md, workflows.md, specs.md (reference only)"
+  shared_root: "documents/ - specifications and shared resources"
+  agents_directory: "documents/agents/ - AI-optimized documentation"
+  users_directory: "documents/users/ - human-readable documentation"
+  
+directory_responsibilities:
+  "documents/":
+    content: "shared specifications, schemas, APIs"
+    audience: "both AI agents and humans"
+    language: "context-dependent (technical specs often English)"
+  "documents/agents/":
+    content: "project details, workflows, optimization guides"
+    audience: "AI agents only"
+    language: "English (processing efficiency)"
+    naming: "descriptive.md (no language suffix)"
+  "documents/users/":
+    content: "setup guides, explanations, tutorials"
+    audience: "human developers"
+    language: "Japanese (primary target language)"
+    naming: "descriptive_JP.md (language suffix required)"
 
 reference_strategy:
-  critical_files: "reference in agent.md"
-  standard_files: "reference in PROJECT.md"
-  gradual_guidance: "agent.md → PROJECT.md → individual files"
+  entry_points: "CLAUDE.md/GEMINI.md reference documents/agents/ primarily"
+  human_entry: "README.md references documents/users/ for human guidance"
+  shared_resources: "both reference documents/ for common specifications"
+  gradual_guidance: "agent.md → documents/agents/ → documents/ (shared specs)"
 
 routing_strategy:
-  PROJECT_md_responsibility: "guide to documents/ files"
-  task_specific_routing: "clear reference targets"
-  lost_prevention: "AI agent navigation safety"
+  ai_workflow: "CLAUDE.md → documents/agents/project.md → task-specific files"
+  human_workflow: "README.md → documents/users/setup_JP.md → detailed guides"
+  shared_specs: "reference documents/ for API specs, schemas, standards"
+  lost_prevention: "clear directory purpose prevents confusion"
 ```
 
 ## Implementation Examples
 
 ```yaml
-# PROJECT.md Example
+# documents/agents/project.md Example
 project: "User Management API"
 status: "in_development"
 priority: "high"
@@ -158,6 +197,11 @@ constraints:
   - "OpenAPI compliant"
   - "OAuth2.0 required"
 current_phase: "MVP implementation"
+
+routing:
+  shared_specs: "documents/api-schema.json"
+  workflows: "documents/agents/development.md"
+  human_setup: "documents/users/setup_JP.md"
 
 # CLAUDE.md Example (Markdown + YAML Structure)
 format_example: |
@@ -174,11 +218,12 @@ format_example: |
   emergency_action: "stop_implementation_and_request_clarification_if_unclear"
   
   ## Routing Information (Priority: High)
-  primary_ref: "documents/PROJECT.md (project details)"
+  primary_ref: "documents/agents/project.md (project details)"
   task_routing:
-    - "before_implementation: documents/PROJECT.md"
-    - "unclear_specs: documents/specs.md"
-    - "testing_related: documents/workflows.md"
+    - "before_implementation: documents/agents/project.md"
+    - "shared_specs: documents/api-schema.json"
+    - "development_workflow: documents/agents/development.md"
+    - "human_coordination: documents/users/setup_JP.md"
   
   ## Efficiency Configuration (Priority: Medium)
   focus_files: ["src/**/*.ts", "tests/**/*.test.ts"]
@@ -193,9 +238,16 @@ format_example: |
 ```yaml
 priority_order:
   1: "[AI_NAME].md (root directory entry point)"
-  2: "documents/PROJECT.md (common project details)"
-  3: "documents/ (detailed information)"
-  4: "README.md (human interface)"
+  2: "documents/agents/project.md (AI-specific project details)"
+  3: "documents/ (shared specifications and schemas)"
+  4: "documents/agents/ (detailed AI-optimized information)"
+  5: "README.md (human interface entry point)"
+  
+human_priority_order:
+  1: "README.md (human entry point)"
+  2: "documents/users/setup_JP.md (setup and getting started)"
+  3: "documents/ (shared specifications when needed)"
+  4: "documents/users/ (detailed human-readable guides)"
 ```
 
 ## Operational Guidelines
