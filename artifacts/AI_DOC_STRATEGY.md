@@ -1,5 +1,13 @@
 # AI Agent Documentation Strategy
 
+```yaml
+document_type: "documentation_strategy"
+target_audience: "ai_agents"
+optimization: "token_efficiency"
+language: "english"
+role: "entry point for the exported documentation strategy"
+```
+
 ## Core Principles
 
 ```yaml

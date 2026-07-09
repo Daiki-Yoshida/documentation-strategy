@@ -1,4 +1,4 @@
-# CLAUDE.md - Claude Agent Instructions (≤200 tokens)
+# AGENTS.md - Devin/Codex Agent Instructions (≤200 tokens)
 
 ## Essential Information (Priority: High)
 role: "documentation_strategy_implementer"
