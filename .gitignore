@@ -15,6 +15,9 @@
 # Review output (temporary, not tracked)
 documents/tmp/
 
+# Serena tool cache and config
+.serena/
+
 # Local development
 .env
 .env.local
