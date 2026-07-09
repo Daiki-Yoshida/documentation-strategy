@@ -4,7 +4,7 @@
 document_type: "workflow"
 target_audience: "ai_agents"
 language: "english"
-strategy_version: "2.1.0"
+strategy_version: "2.2.0"
 ```
 
 ```yaml
@@ -241,7 +241,7 @@ step_3_classify:
   needs_update: "Code changes affect the documented information."
   needs_full_rewrite: "Code changes are so significant that the document must be restructured."
 step_4_act:
-  still_accurate: "No action needed. Optionally update last_updated_commit to HEAD to confirm the document was reviewed."
+  still_accurate: "Update last_updated_commit and last_updated_date in both the document header and INDEX.md entry. Bump document_version (patch — metadata refresh). Bump index_version (patch). Commit: 'chore: <document>のレビュー済みコミットハッシュを更新'. Follow the two-phase workflow (see FILE_AND_STRUCTURE.md → §4)."
   needs_update: "Update the document content. Bump version (minor or patch). Use the two-phase commit workflow."
   needs_full_rewrite: "Treat as a major version bump. Confirm with the user before restructuring (L2/L3 gate)."
 step_5_report: "Report what was detected, what was updated, and the new version."
@@ -255,37 +255,23 @@ step_5_report: "Report what was detected, what was updated, and the new version.
 
 ```yaml
 when_to_bump:
-  major: "Structural change — file added, removed, renamed, or routing significantly changed"
+  major: "Document restructured or rewritten — section reorganization, scope change, or full rewrite"
   minor: "Content addition or significant update — new section, new information"
-  patch: "Small fix — typo, clarification, minor correction"
+  patch: "Small fix — typo, clarification, minor correction, or metadata refresh"
 ```
 
-### How to Bump (Two-Phase Commit Workflow)
-
-The commit hash cannot be known before the commit is made. Use this two-phase
-approach:
+### How to Bump
 
 ```yaml
-phase_1:
-  1: "Update the document content."
-  2: "Bump the document_version in the document's YAML header."
-  3: "Set last_updated_commit to 'pending' (or leave blank)."
-  4: "Update the document's entry in documents/INDEX.md (version + date)."
-  5: "Bump index_version in INDEX.md if a new file was added or routing changed."
-  6: "Commit with the appropriate message prefix."
-phase_2:
-  1: "Get the commit hash: git rev-parse --short HEAD"
-  2: "Update last_updated_commit in the document's header."
-  3: "Update last_updated_commit in the document's INDEX.md entry."
-  4: "Commit: 'chore: <document>のコミットハッシュを記録'"
-alternative: "If the commit has not been pushed, use git commit --amend to fill in the hash in a single commit."
-
-example:
-  document: "documents/project/architecture.md"
-  change: "Added a new section about caching strategy"
-  version_bump: "1.0.0 → 1.1.0 (minor — content addition)"
-  phase_1_commit: "feat: アーキテクチャドキュメントにキャッシュ戦略セクションを追加"
-  phase_2_commit: "chore: アーキテクチャドキュメントのコミットハッシュを記録"
+procedure: "See FILE_AND_STRUCTURE.md → §4 Commit Hash: Two-Phase Workflow for the full procedure."
+summary:
+  - "Update document content and bump document_version."
+  - "Set last_updated_commit to 'pending'."
+  - "Update the document's INDEX.md entry (version + date)."
+  - "Bump index_version if a new file was added or routing changed."
+  - "Commit with the appropriate message prefix."
+  - "After committing, record the commit hash in the document header and INDEX.md entry."
+  - "Commit the hash update: 'chore: <document>のコミットハッシュを記録'"
 ```
 
 ---
@@ -307,7 +293,7 @@ question_3: "Is it reference material (specs, schemas, standards, examples)?"
 
 question_4: "Is it a topic with 3+ files that form a cohesive, self-contained unit?"
   yes: "Create documents/<topic>/ and place files there (see FILE_AND_STRUCTURE.md → §7)."
-  no: "Re-evaluate — it likely belongs in project/ or reference/ as a single file."
+  no: "Place in documents/reference/<topic>.md. Revisit when a third related file appears (Rule of Three)."
 
 anti_pattern: "Do not create a new file for every small piece of information. Prefer extending an existing file with a new section + INDEX.md routing update."
 ```

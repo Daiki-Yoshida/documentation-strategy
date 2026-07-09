@@ -4,7 +4,7 @@
 document_type: "file_and_structure"
 target_audience: "ai_agents"
 language: "english"
-strategy_version: "2.1.0"
+strategy_version: "2.2.0"
 scope: "file roles, directory layout, versioning, git conventions, hierarchy"
 ```
 
@@ -80,16 +80,24 @@ See §4 "Document Versioning System" for the version registry format.
 ### Agent Entry Files (CLAUDE.md, AGENTS.md, GEMINI.md)
 
 ```yaml
-purpose: "AI agent entry point — routes to documents/INDEX.md"
+purpose: "AI agent entry point — conventions + routing"
 placement: "project root (one per agent tool)"
+role: "the first file an AI agent reads when entering a project"
 content:
-  - "role: the agent's responsibility in this project"
-  - "constraints: project-specific rules"
-  - "emergency_action: what to do if intent is unclear"
-  - "routing: documents/INDEX.md as primary reference"
-  - "focus_files: glob patterns the agent should prioritize"
-  - "current_priority: the current development focus"
-design_rule: "The entry file routes; it does not explain. Detail lives under documents/."
+  conventions:
+    - "language settings (e.g., respond in Japanese, think in English)"
+    - "execution rules (e.g., commit after changes, no sudo)"
+    - "emergency_action: what to do if intent is unclear"
+  routing:
+    - "primary_ref: documents/INDEX.md"
+  efficiency:
+    - "focus_files: glob patterns the agent should prioritize"
+    - "current_priority: the current development focus"
+design_rule: |
+  The entry file holds conventions + routing.
+  Conventions (language, execution rules, constraints) live in the entry file itself — they are agent-specific and project-specific.
+  Project detail (architecture, specs, constraints documentation) lives under documents/.
+  The entry file is a template created by the AI agent during setup; the user customizes it thereafter (adding rules like 'no sudo', 'commit after every change', etc.).
 when_to_create: "One file per AI tool the project actually uses. Do not create files for unused tools (YAGNI)."
 ```
 
@@ -164,9 +172,9 @@ which it was last updated. This includes INDEX.md itself.
 
 ```yaml
 scheme: "semantic versioning (MAJOR.MINOR.PATCH)"
-major: "Structural change — file added, removed, renamed, or routing significantly changed"
+major: "Document restructured or rewritten — section reorganization, scope change, or full rewrite that invalidates prior readers' understanding"
 minor: "Content addition or significant update — new section, new information"
-patch: "Small fix — typo, clarification, minor correction"
+patch: "Small fix — typo, clarification, minor correction, or metadata refresh"
 initial_version: "1.0.0"
 ```
 
@@ -206,13 +214,27 @@ documents:
     purpose: "Architecture summary"
 ```
 
+### Registry Path Convention
+
+```yaml
+note: "Registry 'path' fields are repo-root-relative identifiers (e.g., 'documents/project/overview.md'), used for unique identification. This is distinct from markdown cross-reference links, which follow §3's relative-path rule (e.g., 'project/overview.md' from INDEX.md)."
+```
+
 ### INDEX.md Version Bumping
 
 ```yaml
 index_version_bump:
   major: "Registry restructured — bulk reorganization, many files added/removed"
-  minor: "New file registered, or a file's routing entry changed"
+  minor: "File registered or removed, or a file's routing entry changed"
   patch: "Typo fix in an entry, metadata correction"
+```
+
+### INDEX.md Self-Versioning
+
+```yaml
+rule: "INDEX.md uses index_version as its sole version field. It does NOT carry a separate document_version."
+registry_self_entry: "INDEX.md does NOT list itself in the version registry. Its version is tracked by index_version at the top of the file."
+commit_tracking: "INDEX.md carries its own last_updated_commit and last_updated_date at the top of the file, alongside index_version."
 ```
 
 ### Commit Hash: Two-Phase Workflow
@@ -246,7 +268,7 @@ rationale: |
 ```yaml
 how_to_detect_staleness:
   step_1: "Read the document's last_updated_commit from its header."
-  step_2: "Run: git log --onance <last_updated_commit>..HEAD -- <relevant_code_paths>"
+  step_2: "Run: git log --oneline <last_updated_commit>..HEAD -- <relevant_code_paths>"
   step_3: "If the output is non-empty, code has changed since the document was last updated."
   step_4: "Review the listed commits to determine if the document is still accurate."
   step_5: "If inaccurate, update the document (see DOCUMENT_WORKFLOW.md → Staleness Update Flow)."
@@ -271,7 +293,7 @@ types:
   docs: "Documentation changes (new file, content update, routing change)"
   feat: "New documentation feature (new section, new versioning entry)"
   fix: "Documentation fix (correcting inaccurate information)"
-  refactor: "Documentation restructuring (moving files, reorganizing sections)"
+  refactor: "Documentation restructuring (moving, reorganizing, or deleting files)"
   chore: "Maintenance (version bump, metadata update, commit hash recording)"
 examples:
   - "docs: プロジェクト概要を更新"

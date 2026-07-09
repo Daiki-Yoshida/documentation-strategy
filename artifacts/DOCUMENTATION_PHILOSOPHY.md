@@ -4,7 +4,7 @@
 document_type: "documentation_philosophy"
 target_audience: "ai_agents"
 language: "english"
-strategy_version: "2.1.0"
+strategy_version: "2.2.0"
 ```
 
 ## Core Principle: Information Accuracy First
@@ -36,6 +36,9 @@ right_approach: "Split the document by concern so the agent loads only the relev
 governs:
   - "documents/ directory — all content, structure, routing, and maintenance"
   - "documents/INDEX.md — the routing hub and version registry"
+  - "docs-jp/ directory — human-facing documentation placement and separation"
+  - "Agent entry files (CLAUDE.md, AGENTS.md, GEMINI.md) — role, routing, and convention template"
+  - "README.md — role as human-facing entry point"
   - "Git commit message conventions for documentation changes"
   - "Document versioning — tracking which commit a document reflects"
 
@@ -166,7 +169,7 @@ pattern_1_independent:
 pattern_2_combined:
   description: "User references both sets at once for a full-project task."
   examples:
-    - "'Develop this project following @documents/artifacts/' (both folders)"
+    - "'Develop this project following @<strategy_artifacts_path>/' (path varies per project — e.g., documents/artifacts/, artifacts/, or a submodule path)"
     - "Project AGENTS.md lists both artifact sets as references"
   implication: "The AI agent holds both contexts simultaneously."
 ```
