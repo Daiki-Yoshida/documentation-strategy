@@ -54,7 +54,7 @@ DOCUMENTATION_PHILOSOPHY.md:
     - "Universality: single and hierarchical projects, any scale"
     - "Format priority: AI efficiency > human readability (the WHY)"
     - "Common misreadings to prevent"
-    - "Relationship to coding-design artifacts (design-principles vs documentation-strategy)"
+    - "Relationship to design-principles: domain boundary, shared concepts, divergent policies, simultaneous-read guidance"
 
 FILE_AND_STRUCTURE.md:
   owns:
@@ -93,5 +93,5 @@ DOCUMENT_WORKFLOW.md:
 "which format to use (YAML/JSON/Markdown)":     "FILE_AND_STRUCTURE.md (File Format Standards)"
 "when should I re-read this strategy":          "DOCUMENT_WORKFLOW.md (Re-read Triggers)"
 "why is README the only human-readable file":   "DOCUMENTATION_PHILOSOPHY.md (AI-Agent Priority + Misreadings)"
-"how does this relate to design-principles":    "DOCUMENTATION_PHILOSOPHY.md (Scope Boundary)"
+"how does this relate to design-principles":    "DOCUMENTATION_PHILOSOPHY.md (Relationship to design-principles)"
 ```

@@ -120,23 +120,84 @@ rationale: |
 
 ---
 
-## Scope Boundary: Documentation-Strategy vs Coding-Design
+## Relationship to design-principles
 
-This artifact set has a specific responsibility boundary.
+This artifact set has a sibling: `design-principles`. They are independent
+artifact sets with different domains, but a target project typically uses both.
+
+### Domain Boundary
 
 ```yaml
 this_artifact_set:
   name: "documentation-strategy"
+  domain: "documents (documents/, docs/, README.md, agent entry files)"
   owns: "HOW to structure, route, and maintain documentation for AI agents"
   question_answered: "Where does this information go, and how does the agent find it?"
 
 sibling_artifact_set:
   name: "design-principles"
+  domain: "code (src/, tests/, packages/, etc.)"
   owns: "HOW to design and write code that AI agents produce"
   question_answered: "What patterns, boundaries, and contracts should the code follow?"
+```
 
-boundary_rule: "documentation-strategy governs documents; design-principles governs code. They do not overlap."
-coordination: "A target project may use both. Each is referenced independently from the project's agent entry files."
+### Usage Patterns
+
+Both sets are designed to be placed in a target project and read by AI agents.
+Two usage patterns are expected:
+
+```yaml
+pattern_1_independent:
+  description: "User references one set for a domain-specific task."
+  examples:
+    - "Fix a code bug → reference design-principles/"
+    - "Update project documents → reference documentation-strategy/"
+
+pattern_2_combined:
+  description: "User references both sets at once for a full-project task."
+  examples:
+    - "'Develop this project following @documents/artifacts/' (both folders)"
+    - "Project AGENTS.md lists both artifact sets as references"
+  implication: "The AI agent holds both contexts simultaneously."
+```
+
+### Shared Concepts (Intentional Overlap)
+
+Some concepts appear in both sets. This is intentional — each set applies the
+concept to its own domain independently. When both are read simultaneously,
+the agent applies the concept from the set whose domain matches the task.
+
+```yaml
+shared_concepts:
+  single_source_of_truth: "Both define SSOT for their own artifacts. No conflict — each owns its own doc set."
+  brownfield_policy: "Both define how to handle existing non-conforming work. Code violations follow design-principles; document violations follow documentation-strategy."
+  confirmation_gate: "Both define L0–L3 severity levels. Code changes use design-principles' gate; document changes use documentation-strategy's gate."
+  operational_discipline: "Both define reporting and clarification rules. Apply the one matching the task domain."
+  proportionality: "Both scale effort to blast radius. Each within its own domain."
+```
+
+### Divergent Policies (Intentional Difference)
+
+Some policies intentionally differ between the two sets because documents and
+code have different version-control needs.
+
+```yaml
+divergent_policies:
+  version_control:
+    design_principles: "Code changes may use branches. If on the default branch, create a branch before committing."
+    documentation_strategy: "Documentation changes commit directly to the working branch. Do NOT create branches for documentation-only changes."
+    rationale: "Documentation requires atomicity — all related documents must stay consistent in one commit. A branch with different documentation state from the main branch is a defect, not a feature. Code, by contrast, benefits from branch isolation for review and rollback."
+  reporting_language:
+    note: "Both sets defer to the project's global agent rules (e.g., AGENTS.md) for reporting language. Neither overrides global communication policy."
+```
+
+### When Both Are Read Simultaneously
+
+```yaml
+guidance:
+  domain_routing: "If the task touches code (src/, tests/), follow design-principles. If the task touches documents (documents/, README.md), follow documentation-strategy."
+  mixed_tasks: "If a task touches both code and documents (e.g., add a feature AND update PROJECT.md), apply each set to its respective domain. Do not mix rules across domains."
+  conflict_resolution: "If a concept exists in both sets, the set whose domain matches the current action is authoritative. Shared concepts (SSOT, Brownfield, Gate) are applied per-domain, not merged."
 ```
 
 ---
