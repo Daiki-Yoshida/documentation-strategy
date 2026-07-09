@@ -11,11 +11,11 @@ constraints:
 emergency_action: "stop_implementation_and_request_clarification_if_unclear"
 
 ## Routing Information (Priority: High)
-primary_ref: "documents/PROJECT.md (solution overview)"
+primary_ref: "documents/agents/project.md (solution overview)"
 task_routing:
-  - "before_implementation: documents/PROJECT.md"
-  - "architecture_decisions: documents/architecture.md"
-  - "child_project_management: documents/children.md"
+  - "before_implementation: documents/agents/project.md"
+  - "architecture_decisions: documents/agents/architecture.md"
+  - "child_project_management: documents/agents/children.md"
 
 ## Efficiency Configuration (Priority: Medium)
 focus_files: ["*.sln", "*/src/**/*.cs", "*/tests/**/*.cs"]

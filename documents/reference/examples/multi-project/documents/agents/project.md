@@ -20,11 +20,8 @@ current_phase: "core_services_implementation"
 - **SharedLibraries/**: Common utilities, domain models, contracts
 
 ### Core Documentation
-- **Architecture Overview**: documents/architecture.md
-- **Security Guidelines**: documents/security.md
-- **Development Standards**: documents/development.md
-- **Deployment Guide**: documents/deployment.md
-- **Child Project Management**: documents/children.md
+- **Architecture Overview**: documents/agents/architecture.md
+- **Child Project Management**: documents/agents/children.md
 
 ### Communication Patterns
 - **Synchronous**: HTTP REST APIs for real-time operations

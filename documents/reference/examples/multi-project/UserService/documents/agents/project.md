@@ -14,10 +14,7 @@ current_phase: "authentication_and_user_management"
 ## Service Routing
 
 ### Core Documentation
-- **Authentication Flow**: documents/authentication.md
-- **Database Schema**: documents/database.md
-- **API Endpoints**: documents/api-endpoints.md
-- **Security Guidelines**: documents/security.md
+- **Authentication Flow**: documents/agents/authentication.md
 
 ### Domain Responsibilities
 - User registration and profile management

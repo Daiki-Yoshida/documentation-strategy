@@ -11,11 +11,10 @@ constraints:
 emergency_action: "stop_implementation_and_request_clarification_if_unclear"
 
 ## Routing Information (Priority: High)
-primary_ref: "documents/PROJECT.md (service details)"
+primary_ref: "documents/agents/project.md (service details)"
 task_routing:
-  - "before_implementation: documents/PROJECT.md"
-  - "authentication_logic: documents/authentication.md"
-  - "database_schema: documents/database.md"
+  - "before_implementation: documents/agents/project.md"
+  - "authentication_logic: documents/agents/authentication.md"
 
 ## Efficiency Configuration (Priority: Medium)
 focus_files: ["src/**/*.cs", "tests/**/*.cs", "*.csproj"]

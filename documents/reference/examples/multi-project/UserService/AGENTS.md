@@ -1,4 +1,4 @@
-# CLAUDE.md - Claude Agent Instructions (≤200 tokens)
+# AGENTS.md - Devin/Codex Agent Instructions (≤200 tokens)
 
 ## Essential Information (Priority: High)
 role: "service_developer"
@@ -14,9 +14,8 @@ emergency_action: "stop_implementation_and_request_clarification_if_unclear"
 primary_ref: "documents/agents/project.md (service details)"
 task_routing:
   - "before_implementation: documents/agents/project.md"
-  - "product_catalog: documents/agents/catalog.md"
-  - "inventory_management: documents/agents/inventory.md"
+  - "authentication_logic: documents/agents/authentication.md"
 
 ## Efficiency Configuration (Priority: Medium)
 focus_files: ["src/**/*.cs", "tests/**/*.cs", "*.csproj"]
-current_priority: "product catalog and inventory management APIs"
+current_priority: "JWT authentication and user management APIs"

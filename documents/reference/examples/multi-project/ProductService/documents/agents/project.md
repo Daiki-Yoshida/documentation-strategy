@@ -14,10 +14,8 @@ current_phase: "product_catalog_and_inventory"
 ## Service Routing
 
 ### Core Documentation
-- **Product Catalog**: documents/catalog.md
-- **Inventory Management**: documents/inventory.md
-- **Pricing Strategy**: documents/pricing.md
-- **Search Implementation**: documents/search.md
+- **Product Catalog**: documents/agents/catalog.md
+- **Inventory Management**: documents/agents/inventory.md
 
 ### Domain Responsibilities
 - Product catalog management

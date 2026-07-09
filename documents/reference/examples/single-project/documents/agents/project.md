@@ -14,16 +14,15 @@ current_phase: "MVP implementation"
 ## Project Routing
 
 ### Core Documentation
-- **Security Requirements**: documents/security.md
+- **Security Requirements**: documents/agents/security.md
 - **API Specifications**: documents/api-specs.md
-- **Database Schema**: documents/database.md
-- **Testing Guidelines**: documents/testing.md
+- **Testing Guidelines**: documents/agents/testing.md
 
 ### Development Workflow
 - **Before Implementation**: Read this file + documents/api-specs.md
-- **Security Concerns**: Refer to documents/security.md
+- **Security Concerns**: Refer to documents/agents/security.md
 - **Database Changes**: Update documents/database.md
-- **Testing**: Follow documents/testing.md guidelines
+- **Testing**: Follow documents/agents/testing.md guidelines
 
 ### Current Focus Areas
 1. User authentication endpoints

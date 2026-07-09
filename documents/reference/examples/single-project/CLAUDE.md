@@ -11,11 +11,12 @@ constraints:
 emergency_action: "stop_implementation_and_request_clarification_if_unclear"
 
 ## Routing Information (Priority: High)
-primary_ref: "documents/PROJECT.md (project details)"
+primary_ref: "documents/agents/project.md (project details)"
 task_routing:
-  - "before_implementation: documents/PROJECT.md"
-  - "unclear_specs: documents/specs.md"
-  - "testing_related: documents/workflows.md"
+  - "before_implementation: documents/agents/project.md"
+  - "security_concerns: documents/agents/security.md"
+  - "testing_related: documents/agents/testing.md"
+  - "shared_specs: documents/api-specs.md"
 
 ## Efficiency Configuration (Priority: Medium)
 focus_files: ["src/**/*.ts", "tests/**/*.test.ts"]

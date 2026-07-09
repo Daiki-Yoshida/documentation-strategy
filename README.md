@@ -43,7 +43,10 @@ Documentation is structured so AI agents can locate the right context with minim
 
 AI-agent guidance artifacts live in `artifacts/`:
 
-1. `AI_DOC_STRATEGY.md`: the documentation strategy itself — file roles, directory structure, hierarchy rules, format standards, and routing.
+1. `INDEX.md`: entry point — reading order and the single-source ownership map.
+2. `DOCUMENTATION_PHILOSOPHY.md`: core philosophy — AI-agent priority, token optimization, single source of truth, and common misreadings.
+3. `FILE_AND_STRUCTURE.md`: file roles, token limits, format standards, directory layout, and hierarchical project rules.
+4. `DOCUMENT_WORKFLOW.md`: operational workflow — new project setup, brownfield adoption, ongoing updates, and re-read triggers.
 
 To copy the exported artifacts into another project's AI-agent document directory:
 
@@ -73,7 +76,7 @@ git submodule update --init --recursive
 ```
 
 Then instruct the AI agent:
-> "Based on `documentation-strategy/artifacts/AI_DOC_STRATEGY.md`, create the CLAUDE.md / AGENTS.md and PROJECT.md for this project."
+> "Based on `documentation-strategy/artifacts/INDEX.md`, create the CLAUDE.md / AGENTS.md and PROJECT.md for this project."
 
 ### Copy Script
 

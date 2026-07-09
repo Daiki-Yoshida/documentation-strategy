@@ -31,12 +31,16 @@ repository_docs:
 
 ```text
 artifacts/
-└── AI_DOC_STRATEGY.md
+├── INDEX.md
+├── DOCUMENTATION_PHILOSOPHY.md
+├── FILE_AND_STRUCTURE.md
+└── DOCUMENT_WORKFLOW.md
 ```
 
-- `AI_DOC_STRATEGY.md`: AIエージェント向けドキュメント戦略の本体。
-  ファイル役割定義、ディレクトリ構造、階層プロジェクト設計、
-  フォーマット標準、ルーティング戦略を含む。単体で完結する。
+- `INDEX.md`: 入口。読む順序と単一情報源（Ownership Map）を示す索引。
+- `DOCUMENTATION_PHILOSOPHY.md`: AIエージェント最優先、トークン最適化、単一情報源などの核心原則と誤読防止。
+- `FILE_AND_STRUCTURE.md`: ファイル役割、トークン制限、フォーマット標準、ディレクトリ構造、階層プロジェクト設計。
+- `DOCUMENT_WORKFLOW.md`: 新規セットアップ・既存プロジェクト適用・更新運用・再読み込みトリガーの作業手順。
 
 ## このリポジトリ自身の文書
 
