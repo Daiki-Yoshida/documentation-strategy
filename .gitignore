@@ -12,6 +12,9 @@
 /build/
 /dist/
 
+# Review output (temporary, not tracked)
+documents/tmp/
+
 # Local development
 .env
 .env.local
