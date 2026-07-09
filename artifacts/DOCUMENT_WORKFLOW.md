@@ -290,7 +290,8 @@ rule: "When in doubt, ask the user. Structural changes to documentation affect e
 
 ```yaml
 version_control: "Documents are managed in git alongside source code."
-multi_developer: "Standard git workflow (PR/merge) applies to documentation."
+atomicity: "Documentation must stay atomic — all related documents are updated together in one commit. Do NOT split documentation updates across branches; a branch with different documentation state from the main branch is a defect, not a feature."
+no_branch_for_docs: "Do NOT create branches for documentation-only changes. Commit directly to the working branch. Branching is a code-development concern (see design-principles AI_WORKFLOW.md), not a documentation concern."
 update_frequency: "Change-triggered — update documents when the code or architecture changes."
 maintenance: "Review documentation during code review. If a PR changes architecture, it should also update PROJECT.md."
 document_sync: "The AI agent's constraint 'update_related_documents_when_changing_project' enforces this."
