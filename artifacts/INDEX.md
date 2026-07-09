@@ -5,7 +5,7 @@ document_type: "index"
 target_audience: "ai_agents"
 language: "english"
 role: "entry point for the documentation strategy artifact set"
-strategy_version: "2.0.0"
+strategy_version: "2.1.0"
 ```
 
 This is the entry point for the exported strategy. Read it first.
@@ -13,12 +13,24 @@ This is the entry point for the exported strategy. Read it first.
 ## Read Order
 
 ```yaml
-1_philosophy: "DOCUMENTATION_PHILOSOPHY.md"   # WHY:  accuracy priority, scope, git as recording
-2_structure:  "FILE_AND_STRUCTURE.md"         # HOW+WHERE: file roles, directory layout, versioning, git conventions
-3_workflow:   "DOCUMENT_WORKFLOW.md"           # FLOW: setup, update, brownfield, version bumping
+1_philosophy: "DOCUMENTATION_PHILOSOPHY.md"   # WHY:  accuracy priority, scope, git as recording, design-principles relationship
+2_structure:  "FILE_AND_STRUCTURE.md"         # HOW+WHERE: file roles, directory layout, versioning, git conventions, hierarchy, deletion
+3_workflow:   "DOCUMENT_WORKFLOW.md"           # FLOW: setup, update, brownfield, staleness handling, version bumping, deletion
 ```
 
 On first contact, read 1 → 2 → 3. For a specific task, jump via Quick Task Routing.
+
+## Foundational Lens
+
+These artifacts assume an **accuracy-first, routing-driven** paradigm for documentation.
+
+```yaml
+core_idea: "Documentation gives AI agents accurate information at the right time. Token efficiency is achieved through file structure and routing, never through information truncation."
+priority: "accuracy > routing > token efficiency"
+scope: "documents/ only — not code design, not git timing, not branching"
+audience: "documents/ is entirely AI-facing; human-facing content goes in docs-jp/"
+recording: "Git is the recording tool — we govern commit message format and version tracking, not commit timing"
+```
 
 ## Ownership Map (Single Source of Truth)
 
@@ -32,6 +44,7 @@ DOCUMENTATION_PHILOSOPHY.md:
     - "Git as a recording tool (principle, not timing)"
     - "AI-facing by default; human-facing is a separate concern"
     - "Routing over truncation: split files, do not shrink information"
+    - "Relationship to design-principles (domain boundary, usage patterns, simultaneous-read guidance)"
     - "Common misreadings"
 
 FILE_AND_STRUCTURE.md:
@@ -41,9 +54,15 @@ FILE_AND_STRUCTURE.md:
     - "INDEX.md role: routing hub + document version registry"
     - "File roles: agent entry files, INDEX.md, project docs, reference docs"
     - "Document versioning system: semantic version + git commit hash"
+    - "Two-phase commit hash workflow"
+    - "Staleness detection in practice (git log commands)"
+    - "INDEX.md version bumping (index_version)"
     - "Git commit message conventions for documentation"
-    - "Cross-reference and routing strategy"
+    - "Cross-reference and routing strategy (relative paths)"
+    - "Directory splitting guide (Rule of Three)"
     - "Hierarchical projects (parent-child documentation)"
+    - "Document deletion rules"
+    - "Multi-developer INDEX.md conflict mitigation"
     - "File format standards"
 
 DOCUMENT_WORKFLOW.md:
@@ -51,7 +70,10 @@ DOCUMENT_WORKFLOW.md:
     - "New project setup: step-by-step"
     - "Brownfield adoption: audit, classify, migrate"
     - "Ongoing document updates"
-    - "Version bumping workflow"
+    - "Staleness handling: detection, classification, update flow"
+    - "Version bumping workflow (two-phase commit)"
+    - "Document creation decision tree"
+    - "Document deletion workflow"
     - "Re-read triggers"
     - "Confirmation gate (L0–L3)"
 ```
@@ -62,11 +84,17 @@ DOCUMENT_WORKFLOW.md:
 "setting up docs for a new project":       "DOCUMENT_WORKFLOW.md (New Project Setup) + FILE_AND_STRUCTURE.md (File Roles)"
 "adopting strategy in existing project":    "DOCUMENT_WORKFLOW.md (Brownfield Adoption)"
 "updating an existing document":            "DOCUMENT_WORKFLOW.md (Ongoing Updates) + FILE_AND_STRUCTURE.md (find the right file)"
+"document is stale (behind HEAD)":          "DOCUMENT_WORKFLOW.md (Staleness Handling) + FILE_AND_STRUCTURE.md (Staleness Detection)"
 "bumping a document version":               "DOCUMENT_WORKFLOW.md (Version Bumping) + FILE_AND_STRUCTURE.md (Versioning System)"
+"recording commit hash after update":       "DOCUMENT_WORKFLOW.md (Two-Phase Commit) + FILE_AND_STRUCTURE.md (Commit Hash Workflow)"
 "writing a git commit message for docs":    "FILE_AND_STRUCTURE.md (Git Commit Conventions)"
 "which file should hold this information":  "FILE_AND_STRUCTURE.md (File Role Definitions)"
+"should I create a new directory":          "FILE_AND_STRUCTURE.md (Directory Splitting Guide)"
 "how to structure a multi-service project": "FILE_AND_STRUCTURE.md (Hierarchical Projects)"
 "setting up documents/INDEX.md":            "FILE_AND_STRUCTURE.md (INDEX.md Role) + DOCUMENT_WORKFLOW.md (New Project Setup)"
+"deleting a document":                      "DOCUMENT_WORKFLOW.md (Document Deletion) + FILE_AND_STRUCTURE.md (Document Deletion Rules)"
+"splitting a document into two":            "FILE_AND_STRUCTURE.md (Directory Splitting Guide) + DOCUMENT_WORKFLOW.md (Version Bumping)"
 "when should I re-read this strategy":      "DOCUMENT_WORKFLOW.md (Re-read Triggers)"
 "what does this strategy govern":           "DOCUMENTATION_PHILOSOPHY.md (Scope Boundary)"
+"how does this relate to design-principles": "DOCUMENTATION_PHILOSOPHY.md (Relationship to design-principles)"
 ```

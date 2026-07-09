@@ -4,7 +4,7 @@
 document_type: "documentation_philosophy"
 target_audience: "ai_agents"
 language: "english"
-strategy_version: "2.0.0"
+strategy_version: "2.1.0"
 ```
 
 ## Core Principle: Information Accuracy First
@@ -30,7 +30,7 @@ right_approach: "Split the document by concern so the agent loads only the relev
 
 ---
 
-## Scope: What This Strategy Govers
+## Scope: What This Strategy Governs
 
 ```yaml
 governs:
@@ -132,6 +132,53 @@ scope:
 
 > **Single source of truth**: hierarchical structure rules live in
 > `FILE_AND_STRUCTURE.md` → "Hierarchical Projects".
+
+---
+
+## Relationship to design-principles
+
+This strategy has a sibling: `design-principles`. They are independent artifact
+sets with different domains, but a target project typically uses both.
+
+### Domain Boundary
+
+```yaml
+this_artifact_set:
+  name: "documentation-strategy"
+  domain: "documents (documents/, docs-jp/, agent entry files)"
+  owns: "HOW to structure, route, version, and maintain documentation for AI agents"
+
+sibling_artifact_set:
+  name: "design-principles"
+  domain: "code (src/, tests/, packages/, etc.)"
+  owns: "HOW to design and write code that AI agents produce"
+```
+
+### Usage Patterns
+
+```yaml
+pattern_1_independent:
+  description: "User references one set for a domain-specific task."
+  examples:
+    - "Fix a code bug → reference design-principles/"
+    - "Update project documents → reference documentation-strategy/"
+
+pattern_2_combined:
+  description: "User references both sets at once for a full-project task."
+  examples:
+    - "'Develop this project following @documents/artifacts/' (both folders)"
+    - "Project AGENTS.md lists both artifact sets as references"
+  implication: "The AI agent holds both contexts simultaneously."
+```
+
+### When Both Are Read Simultaneously
+
+```yaml
+guidance:
+  domain_routing: "If the task touches code (src/, tests/), follow design-principles. If the task touches documents (documents/, README.md), follow documentation-strategy."
+  mixed_tasks: "If a task touches both code and documents, apply each set to its respective domain. Do not mix rules across domains."
+  shared_concepts: "SSOT, brownfield policy, confirmation gate, and proportionality exist in both sets. Each is applied per-domain, not merged."
+```
 
 ---
 

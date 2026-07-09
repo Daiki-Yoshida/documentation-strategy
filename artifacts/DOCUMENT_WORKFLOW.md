@@ -4,7 +4,7 @@
 document_type: "workflow"
 target_audience: "ai_agents"
 language: "english"
-strategy_version: "2.0.0"
+strategy_version: "2.1.0"
 ```
 
 ```yaml
@@ -23,6 +23,7 @@ ownership_split:
 1_new_project: "Apply the strategy from scratch."
 2_existing_project: "Adopt the strategy in a project that already has documentation."
 3_ongoing_updates: "The project follows the strategy; update documents during development."
+4_staleness_handling: "Detect and fix stale documents whose commit hash is behind HEAD."
 ```
 
 ---
@@ -73,6 +74,7 @@ content:
   - "Version registry: each document's version + last-updated git commit hash"
   - "Cross-reference map"
 format: "See FILE_AND_STRUCTURE.md → §4 Document Versioning System"
+index_version: "Start at 1.0.0."
 ```
 
 ### Step 4: Create Project Documents
@@ -85,7 +87,7 @@ content:
   - "Constraints (business rules, compliance, performance)"
   - "Current status and roadmap"
 rule: "One file = one concern. Split when a file covers multiple concerns."
-versioning: "Each file starts at version 1.0.0 with the current commit hash."
+versioning: "Each file starts at version 1.0.0. Use the two-phase workflow for commit hash (see Version Bumping)."
 ```
 
 ### Step 5: Create docs-jp/ (If Human-Facing Content Is Needed)
@@ -104,9 +106,9 @@ rule: "Human-facing content does NOT go under documents/. It goes in docs-jp/."
 ```yaml
 action: "Create documents as the project grows — not all at once."
 trigger: "When a task requires context that does not fit in existing project documents, create a new file."
-placement: "documents/reference/<topic>.md or documents/<topic>/<topic>.md"
+placement: "documents/reference/<topic>.md or documents/<topic>/ (see FILE_AND_STRUCTURE.md → §7 Directory Splitting Guide)"
 rule: "Prefer fewer files with clear routing over many files with overlapping content."
-versioning: "Register every new file in documents/INDEX.md with version 1.0.0."
+versioning: "Register every new file in documents/INDEX.md with version 1.0.0. Bump index_version (minor)."
 ```
 
 ---
@@ -217,26 +219,73 @@ rules:
 
 ---
 
+## Use Case 4: Staleness Handling
+
+**When:** an AI agent detects that a document's `last_updated_commit` is behind
+HEAD and code relevant to the document has changed since then.
+
+### Detection
+
+```yaml
+detection: "See FILE_AND_STRUCTURE.md → §4 Staleness Detection in Practice."
+summary: "Compare the document's last_updated_commit with HEAD using git log on relevant code paths."
+```
+
+### Staleness Update Flow
+
+```yaml
+step_1_detect: "Run git log --oneline <last_updated_commit>..HEAD -- <relevant_code_paths>."
+step_2_assess: "Review the listed commits. Determine if the document is still accurate."
+step_3_classify:
+  still_accurate: "Code changes did not affect the documented information."
+  needs_update: "Code changes affect the documented information."
+  needs_full_rewrite: "Code changes are so significant that the document must be restructured."
+step_4_act:
+  still_accurate: "No action needed. Optionally update last_updated_commit to HEAD to confirm the document was reviewed."
+  needs_update: "Update the document content. Bump version (minor or patch). Use the two-phase commit workflow."
+  needs_full_rewrite: "Treat as a major version bump. Confirm with the user before restructuring (L2/L3 gate)."
+step_5_report: "Report what was detected, what was updated, and the new version."
+```
+
+---
+
 ## Version Bumping Workflow
+
+### When to Bump
 
 ```yaml
 when_to_bump:
   major: "Structural change — file added, removed, renamed, or routing significantly changed"
   minor: "Content addition or significant update — new section, new information"
   patch: "Small fix — typo, clarification, minor correction"
+```
 
-how_to_bump:
-  1: "Update the document's version header (document_version, last_updated_commit, last_updated_date)."
-  2: "Update the corresponding entry in documents/INDEX.md version registry."
-  3: "Record the git commit hash of the commit that includes the update."
-  4: "Use the appropriate commit message prefix (see FILE_AND_STRUCTURE.md → Git Commit Conventions)."
+### How to Bump (Two-Phase Commit Workflow)
+
+The commit hash cannot be known before the commit is made. Use this two-phase
+approach:
+
+```yaml
+phase_1:
+  1: "Update the document content."
+  2: "Bump the document_version in the document's YAML header."
+  3: "Set last_updated_commit to 'pending' (or leave blank)."
+  4: "Update the document's entry in documents/INDEX.md (version + date)."
+  5: "Bump index_version in INDEX.md if a new file was added or routing changed."
+  6: "Commit with the appropriate message prefix."
+phase_2:
+  1: "Get the commit hash: git rev-parse --short HEAD"
+  2: "Update last_updated_commit in the document's header."
+  3: "Update last_updated_commit in the document's INDEX.md entry."
+  4: "Commit: 'chore: <document>のコミットハッシュを記録'"
+alternative: "If the commit has not been pushed, use git commit --amend to fill in the hash in a single commit."
 
 example:
   document: "documents/project/architecture.md"
   change: "Added a new section about caching strategy"
   version_bump: "1.0.0 → 1.1.0 (minor — content addition)"
-  commit_message: "feat: アーキテクチャドキュメントにキャッシュ戦略セクションを追加"
-  index_update: "Update version to 1.1.0 and last_updated_commit to the new commit hash"
+  phase_1_commit: "feat: アーキテクチャドキュメントにキャッシュ戦略セクションを追加"
+  phase_2_commit: "chore: アーキテクチャドキュメントのコミットハッシュを記録"
 ```
 
 ---
@@ -256,11 +305,32 @@ question_3: "Is it reference material (specs, schemas, standards, examples)?"
   yes: "Place in documents/reference/<topic>.md."
   no: "Continue to question 4."
 
-question_4: "Is it a topic-specific concern that needs its own directory?"
-  yes: "Create documents/<topic>/ and place files there."
-  no: "Re-evaluate — it may be human-facing after all."
+question_4: "Is it a topic with 3+ files that form a cohesive, self-contained unit?"
+  yes: "Create documents/<topic>/ and place files there (see FILE_AND_STRUCTURE.md → §7)."
+  no: "Re-evaluate — it likely belongs in project/ or reference/ as a single file."
 
 anti_pattern: "Do not create a new file for every small piece of information. Prefer extending an existing file with a new section + INDEX.md routing update."
+```
+
+---
+
+## Document Deletion Workflow
+
+```yaml
+when_to_delete:
+  - "The document is obsolete — the content it described no longer exists."
+  - "The document was merged into another document and is now redundant."
+  - "The user explicitly asks to remove it."
+
+deletion_steps:
+  1: "Search the entire documents/ tree for references to the document."
+  2: "Update or remove all referencing links."
+  3: "Remove the document's entry from documents/INDEX.md."
+  4: "Bump index_version in INDEX.md (minor — file removed from registry)."
+  5: "Commit: 'refactor: <document>を削除' with a note explaining why in the body."
+
+rule: "Never delete a document that other documents still reference without fixing those references first."
+confirmation: "L2_structural — proceed only if clearly implied by the task; report explicitly."
 ```
 
 ---
@@ -297,7 +367,7 @@ Before changing the documentation structure, assess the impact.
 ```yaml
 L0_content: "Updating content within an existing file (no structural change) — proceed."
 L1_additive: "Adding a new file in an existing directory — proceed and report."
-L2_structural: "Moving files, changing routing paths, renaming files — proceed only if clearly implied by the task; report explicitly."
-L3_breaking: "Removing a document, restructuring the entire documents/ tree, changing project from single to hierarchical — MUST confirm before implementation."
+L2_structural: "Moving files, changing routing paths, renaming files, deleting a document — proceed only if clearly implied by the task; report explicitly."
+L3_breaking: "Removing a core document, restructuring the entire documents/ tree, changing project from single to hierarchical — MUST confirm before implementation."
 rule: "When in doubt, ask the user. Structural changes affect every future AI agent session."
 ```

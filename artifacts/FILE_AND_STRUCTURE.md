@@ -4,7 +4,7 @@
 document_type: "file_and_structure"
 target_audience: "ai_agents"
 language: "english"
-strategy_version: "2.0.0"
+strategy_version: "2.1.0"
 scope: "file roles, directory layout, versioning, git conventions, hierarchy"
 ```
 
@@ -40,7 +40,7 @@ structure:
   - "documents/INDEX.md — routing hub + version registry (required)"
   - "documents/project/ — project-level context (overview, architecture, constraints)"
   - "documents/reference/ — reference materials (specs, standards, examples)"
-  - "documents/<topic>/ — topic-specific directories as needed"
+  - "documents/<topic>/ — topic-specific directories (see §7 Directory Splitting Guide)"
 principle: "Split by concern, not by audience. There is no audience split inside documents/ — it is all AI-facing."
 ```
 
@@ -72,6 +72,7 @@ content:
   - "Routing map: which document to read for which task"
   - "Version registry: each document's version + last-updated git commit hash"
   - "Cross-reference map: which documents link to which"
+versioning: "INDEX.md has its own version (index_version). Bump it when the inventory or routing changes. See §4."
 ```
 
 See §4 "Document Versioning System" for the version registry format.
@@ -139,23 +140,25 @@ principles:
   - "Each document links to related documents instead of duplicating content."
   - "One file = one concern. A task that touches one concern should require reading one file."
   - "The agent follows the routing chain only as far as needed."
-  - "Cross-references use relative paths from the project root."
+  - "Cross-references use relative paths from the referencing file."
 ```
 
 ### Reference Format
 
 ```yaml
 format: "markdown links with brief context"
-example: "See [documents/project/architecture.md](../project/architecture.md) for the architecture overview."
+example_from_index: "See [project/architecture.md](project/architecture.md) for the architecture overview."
+example_from_project_doc: "See [../reference/api-specs.md](../reference/api-specs.md) for API specifications."
 rule: "Never duplicate content that exists elsewhere. Link to it with a one-sentence description."
+path_note: "Paths are relative to the file containing the link. From documents/INDEX.md, a link to documents/project/overview.md is written as project/overview.md."
 ```
 
 ---
 
 ## 4. Document Versioning System
 
-Every document under `documents/` (except INDEX.md itself) has a version and
-tracks the git commit at which it was last updated.
+Every document under `documents/` has a version and tracks the git commit at
+which it was last updated. This includes INDEX.md itself.
 
 ### Version Format
 
@@ -167,34 +170,65 @@ patch: "Small fix — typo, clarification, minor correction"
 initial_version: "1.0.0"
 ```
 
-### Version Registry in INDEX.md
+### Per-Document Version Header
+
+Each document includes a version block in its top YAML front matter:
 
 ```yaml
-# Example entry in documents/INDEX.md
+# At the top of each document, inside the existing YAML block:
+document_version: "1.2.0"
+last_updated_commit: "abc1234"
+last_updated_date: "2025-07-09"
+```
+
+```yaml
+format_rule: "Use the same YAML code block (```yaml) that already holds document_type, target_audience, etc. Do NOT use a separate front-matter block (---)."
+```
+
+### Version Registry in INDEX.md
+
+INDEX.md maintains a registry of all documents. INDEX.md itself has an
+`index_version` field that tracks the registry's version.
+
+```yaml
+# Example entries in documents/INDEX.md
+index_version: "1.3.0"
 documents:
   - path: "documents/project/overview.md"
     version: "1.2.0"
     last_updated_commit: "abc1234"
-    last_updated_date: "2024-07-09"
+    last_updated_date: "2025-07-09"
     purpose: "Project overview and objectives"
   - path: "documents/project/architecture.md"
     version: "1.0.0"
     last_updated_commit: "def5678"
-    last_updated_date: "2024-07-09"
+    last_updated_date: "2025-07-09"
     purpose: "Architecture summary"
 ```
 
-### Per-Document Header
-
-Each document includes a version header at the top:
+### INDEX.md Version Bumping
 
 ```yaml
-# At the top of each document file
----
-document_version: "1.2.0"
-last_updated_commit: "abc1234"
-last_updated_date: "2024-07-09"
----
+index_version_bump:
+  major: "Registry restructured — bulk reorganization, many files added/removed"
+  minor: "New file registered, or a file's routing entry changed"
+  patch: "Typo fix in an entry, metadata correction"
+```
+
+### Commit Hash: Two-Phase Workflow
+
+The commit hash cannot be known before the commit is made. Use this workflow:
+
+```yaml
+phase_1_commit:
+  action: "Update the document content and bump the version number."
+  commit_hash_field: "Leave last_updated_commit blank or set to 'pending'."
+  commit: "Commit with the appropriate message prefix."
+phase_2_record:
+  action: "After committing, get the hash with: git rev-parse --short HEAD"
+  update: "Fill in last_updated_commit in the document header AND in INDEX.md."
+  commit: "Commit the hash update as a follow-up: 'chore: <document>のコミットハッシュを記録'"
+alternative: "Use git commit --amend to fill in the hash before finalizing, if the commit has not been pushed yet."
 ```
 
 ### Why Track Commit Hash
@@ -205,6 +239,22 @@ rationale: |
   whether the document reflects the current state of the code. If the document's
   last_updated_commit is behind HEAD, the agent knows the document may be stale
   and should be verified against the code before relying on it.
+```
+
+### Staleness Detection in Practice
+
+```yaml
+how_to_detect_staleness:
+  step_1: "Read the document's last_updated_commit from its header."
+  step_2: "Run: git log --onance <last_updated_commit>..HEAD -- <relevant_code_paths>"
+  step_3: "If the output is non-empty, code has changed since the document was last updated."
+  step_4: "Review the listed commits to determine if the document is still accurate."
+  step_5: "If inaccurate, update the document (see DOCUMENT_WORKFLOW.md → Staleness Update Flow)."
+example: |
+  # Document header says: last_updated_commit: "abc1234"
+  # Check if src/ changed since then:
+  git log --oneline abc1234..HEAD -- src/
+  # If output shows commits, the document may be stale.
 ```
 
 ---
@@ -222,7 +272,7 @@ types:
   feat: "New documentation feature (new section, new versioning entry)"
   fix: "Documentation fix (correcting inaccurate information)"
   refactor: "Documentation restructuring (moving files, reorganizing sections)"
-  chore: "Maintenance (version bump, metadata update)"
+  chore: "Maintenance (version bump, metadata update, commit hash recording)"
 examples:
   - "docs: プロジェクト概要を更新"
   - "fix: API仕様のエンドポイントURLを修正"
@@ -266,7 +316,32 @@ naming: "lowercase, hyphen-separated for files; directories are lowercase"
 
 ---
 
-## 7. Hierarchical Projects
+## 7. Directory Splitting Guide
+
+When to create a new `documents/<topic>/` directory vs. placing a file in
+`documents/project/` or `documents/reference/`.
+
+```yaml
+default_placement:
+  project_level: "documents/project/ — context the agent needs for every task"
+  reference_level: "documents/reference/ — material the agent reads on demand"
+
+when_to_create_topic_directory:
+  criteria:
+    - "The topic has 3 or more files that form a cohesive unit."
+    - "The topic is self-contained — an agent can read only that directory for the topic."
+    - "Placing the files in project/ or reference/ would make those directories cluttered."
+  rule: "Do NOT create a topic directory for 1–2 files. Place them in project/ or reference/ until a third file appears (Rule of Three)."
+
+when_not_to_create:
+  - "The topic overlaps with project/ or reference/ content."
+  - "The files would need to cross-reference each other heavily (keep them together in one directory)."
+  - "The topic is a single file — use project/ or reference/ instead."
+```
+
+---
+
+## 8. Hierarchical Projects
 
 For multi-service or multi-package projects, each child has an independent
 `documents/` tree. The parent does not enter children's trees.
@@ -308,13 +383,47 @@ rule: "Children do not reference this file. Children are unaware of each other u
 
 ---
 
+## 9. Document Deletion Rules
+
+When a document under `documents/` is removed:
+
+```yaml
+deletion_steps:
+  1: "Confirm the document is truly obsolete — check all cross-references first."
+  2: "Remove or update all links pointing to the deleted document (search the entire documents/ tree)."
+  3: "Remove the document's entry from documents/INDEX.md version registry."
+  4: "Bump index_version in INDEX.md (minor — a file was removed from the registry)."
+  5: "Commit with: 'refactor: <document>を削除' and note why in the body."
+rule: "Never delete a document that other documents still reference without fixing those references first."
+```
+
+---
+
+## 10. Multi-Developer INDEX.md Conflict Mitigation
+
+The version registry in INDEX.md is a single file that all documentation
+changes touch, which can cause merge conflicts when multiple developers update
+documents in parallel.
+
+```yaml
+mitigation:
+  - "Keep INDEX.md entries sorted by path to reduce conflict surface."
+  - "Each developer updates only their own document's entry."
+  - "If conflicts occur, they are typically in the version registry block — resolve by keeping both entries and sorting."
+  - "For large teams, consider updating INDEX.md in a separate commit from the document change, to isolate conflicts."
+note: "This is a known trade-off of centralizing the version registry. The benefit (single routing hub) outweighs the conflict cost for most projects."
+```
+
+---
+
 ## How These Interlock
 
 ```yaml
 entry_file_routes: "agent.md routes to documents/INDEX.md"
 index_routes: "INDEX.md routes to project/ or reference/ based on the task"
 version_registry: "INDEX.md tracks every document's version + commit hash for staleness detection"
-cross_references: "Documents link to each other instead of duplicating content"
+cross_references: "Documents link to each other using relative paths from the referencing file"
 hierarchy: "Parent and child each have independent documents/ trees; coordination via parent's children.md"
+deletion: "Removing a document requires fixing references + updating INDEX.md"
 one_idea: "INDEX.md is the map, documents are the destinations, version headers are the timestamps. The agent reads the map, picks a destination, and follows links only as far as needed."
 ```
