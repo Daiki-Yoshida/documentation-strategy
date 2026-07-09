@@ -11,12 +11,12 @@ constraints:
 emergency_action: "stop_review_and_request_clarification_if_unclear"
 
 ## Routing Information (Priority: High)
-primary_ref: "documents/agents/project.md (project details)"
+primary_ref: "documents/INDEX.md (routing hub)"
 task_routing:
-  - "before_review: documents/agents/project.md"
-  - "security_concerns: documents/agents/security.md"
-  - "testing_guidelines: documents/agents/testing.md"
-  - "shared_specs: documents/api-specs.md"
+  - "project_overview: documents/project/overview.md"
+  - "api_specs: documents/reference/api-specs.md"
+  - "security: documents/reference/security.md"
+  - "testing: documents/reference/testing.md"
 
 ## Efficiency Configuration (Priority: Medium)
 focus_files: ["src/**/*.ts", "tests/**/*.test.ts"]

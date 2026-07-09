@@ -1,21 +1,17 @@
-# Document Workflow - Operational Guidelines
+# Document Workflow
 
 ```yaml
 document_type: "workflow"
 target_audience: "ai_agents"
-optimization: "process_consistency"
 language: "english"
+strategy_version: "2.0.0"
 ```
-
-This document defines the operational procedures for applying the documentation
-strategy: setting up a new project, adopting the strategy in an existing project,
-updating documents during development, and knowing when to re-read this strategy.
 
 ```yaml
 ownership_split:
   this_doc: "FLOW — when to act, what steps to follow, when to confirm"
-  FILE_AND_STRUCTURE.md: "HOW + WHERE — file roles, directory layout, token limits"
-  DOCUMENTATION_PHILOSOPHY.md: "WHY — principles behind the rules"
+  FILE_AND_STRUCTURE.md: "HOW + WHERE — file roles, directory layout, versioning, git conventions"
+  DOCUMENTATION_PHILOSOPHY.md: "WHY — accuracy priority, scope, git as recording"
   INDEX.md: "routes to all of the above"
 ```
 
@@ -24,10 +20,9 @@ ownership_split:
 ## Use Cases
 
 ```yaml
-use_cases:
-  1_new_project: "Apply the strategy from scratch — no existing documentation structure."
-  2_existing_project: "Adopt the strategy in a project that already has documentation (brownfield)."
-  3_ongoing_updates: "The project already follows this strategy; update or add documents during development."
+1_new_project: "Apply the strategy from scratch."
+2_existing_project: "Adopt the strategy in a project that already has documentation."
+3_ongoing_updates: "The project follows the strategy; update documents during development."
 ```
 
 ---
@@ -44,65 +39,74 @@ files:
   CLAUDE_md: "if using Claude Code"
   AGENTS_md: "if using Devin or Codex"
   GEMINI_md: "if using Gemini"
-token_limit: 200
-content_template:
+content:
   essential:
     - "role: the agent's responsibility in this project"
-    - "constraints: project-specific rules the agent must follow"
+    - "constraints: project-specific rules"
     - "emergency_action: what to do if intent is unclear"
   routing:
-    - "primary_ref: documents/agents/project.md (or documents/PROJECT.md)"
-    - "task_routing: map task types to specific documents"
+    - "primary_ref: documents/INDEX.md"
   efficiency:
     - "focus_files: glob patterns for the agent to prioritize"
     - "current_priority: the current development focus"
+rule: "The entry file routes to documents/INDEX.md. It does not contain project detail."
 ```
 
-### Step 2: Create the Documents Directory
+### Step 2: Create the documents/ Directory
 
 ```yaml
 action: "Create the directory tree."
 structure:
-  - "documents/ (shared specs)"
-  - "documents/agents/ (AI-facing docs, English)"
-  - "documents/users/ (human-facing docs, Japanese, _JP.md suffix)"
+  - "documents/INDEX.md (required — create in Step 3)"
+  - "documents/project/ (project-level context)"
+  - "documents/reference/ (reference material)"
 rule: "Only create directories you will populate. Do not create empty directories speculatively (YAGNI)."
 ```
 
-### Step 3: Create PROJECT.md
+### Step 3: Create documents/INDEX.md
 
 ```yaml
-action: "Create the project overview file."
-placement: "documents/agents/project.md (preferred) or documents/PROJECT.md"
-token_limit: 800
+action: "Create the routing hub and version registry."
 content:
-  - "project name, status, priority"
-  - "tech stack and architecture"
-  - "constraints (test coverage, security, compliance)"
-  - "current phase and focus areas"
-  - "routing to task-specific documents"
+  - "Document inventory: list every file under documents/ with its purpose"
+  - "Routing map: which document to read for which task"
+  - "Version registry: each document's version + last-updated git commit hash"
+  - "Cross-reference map"
+format: "See FILE_AND_STRUCTURE.md → §4 Document Versioning System"
 ```
 
-### Step 4: Create README.md
+### Step 4: Create Project Documents
 
 ```yaml
-action: "Create the human-facing entry point."
-language: "project's human language (Japanese primary target)"
+action: "Create project-level context documents in documents/project/."
 content:
-  - "project description and purpose"
-  - "setup and usage instructions"
-  - "contribution guidelines"
-  - "project background"
-token_limit: none
+  - "Project overview, objectives, scope"
+  - "Architecture summary"
+  - "Constraints (business rules, compliance, performance)"
+  - "Current status and roadmap"
+rule: "One file = one concern. Split when a file covers multiple concerns."
+versioning: "Each file starts at version 1.0.0 with the current commit hash."
 ```
 
-### Step 5: Add Task-Specific Documents As Needed
+### Step 5: Create docs-jp/ (If Human-Facing Content Is Needed)
+
+```yaml
+action: "Create docs-jp/ for human-facing documentation."
+content:
+  - "Project background and motivation"
+  - "Setup tutorials"
+  - "Design rationale"
+rule: "Human-facing content does NOT go under documents/. It goes in docs-jp/."
+```
+
+### Step 6: Add Reference and Topic-Specific Documents As Needed
 
 ```yaml
 action: "Create documents as the project grows — not all at once."
-trigger: "When a task requires context that does not fit in PROJECT.md (800 tokens), extract it into a task-specific file."
-placement: "documents/agents/<topic>.md (AI-facing) or documents/users/<topic>_JP.md (human-facing)"
+trigger: "When a task requires context that does not fit in existing project documents, create a new file."
+placement: "documents/reference/<topic>.md or documents/<topic>/<topic>.md"
 rule: "Prefer fewer files with clear routing over many files with overlapping content."
+versioning: "Register every new file in documents/INDEX.md with version 1.0.0."
 ```
 
 ---
@@ -116,56 +120,46 @@ rule: "Prefer fewer files with clear routing over many files with overlapping co
 ```yaml
 action: "Read all existing documentation and classify each file."
 classification:
-  ai_facing: "content an AI agent needs during development (specs, constraints, architecture)"
+  ai_facing: "content an AI agent needs during development"
   human_facing: "content for human developers (setup, tutorials, background)"
-  shared: "content both audiences need (API schemas, data models)"
+  shared: "content both audiences need"
   obsolete: "outdated or redundant content"
 ```
 
 ### Step 2: Map to the New Structure
 
 ```yaml
-action: "Decide where each piece of information belongs."
 mapping:
-  ai_facing: "documents/agents/ (English, no suffix)"
-  human_facing: "documents/users/ (Japanese, _JP.md suffix)"
-  shared: "documents/ (context-dependent language)"
+  ai_facing: "documents/project/ or documents/reference/ (AI-facing)"
+  human_facing: "docs-jp/ (human-facing)"
+  shared: "documents/ (AI-facing by default; extract human summary to docs-jp/ if needed)"
   obsolete: "remove or archive — do not migrate"
 ```
 
-### Step 3: Create Agent Entry Files
+### Step 3: Create Agent Entry Files and INDEX.md
 
 ```yaml
-action: "Create CLAUDE.md / AGENTS.md / GEMINI.md as needed."
-note: "These did not exist before — create them fresh following the New Project Setup steps."
+action: "Create CLAUDE.md / AGENTS.md / GEMINI.md as needed, and documents/INDEX.md."
+note: "Follow Use Case 1 Steps 1–3 for these."
 ```
 
-### Step 4: Create or Consolidate PROJECT.md
+### Step 4: Migrate Documents
 
 ```yaml
-action: "Extract project-level context from existing docs into PROJECT.md."
-token_limit: 800
-rule: "Do NOT copy entire existing documents into PROJECT.md. Extract the essential context and route to details."
-conflict: "If existing docs contradict each other, flag the conflict to the user — do not silently pick one."
-```
-
-### Step 5: Migrate Documents
-
-```yaml
-action: "Move or rewrite existing documents into the new directory structure."
+action: "Move or rewrite existing documents into the new structure."
 rules:
-  - "Rewrite for token efficiency if the original was prose-heavy."
-  - "Convert structured data to YAML blocks where appropriate."
+  - "AI-facing content goes to documents/ with proper versioning."
+  - "Human-facing content goes to docs-jp/."
   - "Eliminate duplication: if two files covered the same topic, merge into one and link from the other."
   - "Preserve information — do not delete content without user confirmation."
   - "Report what was moved, merged, or flagged as obsolete."
 ```
 
-### Step 6: Update Cross-References
+### Step 5: Update INDEX.md and Cross-References
 
 ```yaml
-action: "Fix any internal references broken by the migration."
-check: "All routing paths in agent entry files and PROJECT.md point to correct locations."
+action: "Register all migrated documents in documents/INDEX.md with version 1.0.0."
+check: "All routing paths in agent entry files and INDEX.md point to correct locations."
 ```
 
 ### Brownfield Guard
@@ -173,26 +167,26 @@ check: "All routing paths in agent entry files and PROJECT.md point to correct l
 ```yaml
 guard:
   scope: "Do NOT let a documentation migration expand into a content rewrite."
-  rule: "Structural migration and content improvement are separate tasks. Do one, then the other — not both at once."
-  violation_handling: "If you find existing documentation that violates the strategy, note it in the report. Do NOT silently fix it unless the task explicitly asks for it."
-  local_convention: "Explicit project conventions (existing lint, house style) OUTRANK this strategy where they conflict. Report the conflict once, then follow the local rule."
+  rule: "Structural migration and content improvement are separate tasks. Do one, then the other."
+  violation_handling: "If you find documentation that violates the strategy, note it in the report. Do NOT silently fix it unless the task explicitly asks."
+  local_convention: "Explicit project conventions OUTRANK this strategy where they conflict. Report the conflict once, then follow the local rule."
 ```
 
 ---
 
 ## Use Case 3: Ongoing Document Updates
 
-**When:** the project already follows this strategy and documents need updating during development.
+**When:** the project follows this strategy and documents need updating.
 
 ### When to Update
 
 ```yaml
 update_triggers:
-  architecture_change: "Update PROJECT.md and affected task-specific docs."
-  new_feature: "Add task-specific docs in documents/agents/ as needed; update PROJECT.md routing."
-  constraint_change: "Update PROJECT.md constraints section and agent entry files if the constraint affects agent behavior."
-  tech_stack_change: "Update PROJECT.md tech_stack; review whether existing docs are still accurate."
-  directory_restructure: "Update all routing references in agent entry files and PROJECT.md."
+  architecture_change: "Update project architecture docs and INDEX.md version registry."
+  new_feature: "Add reference docs as needed; update INDEX.md routing."
+  constraint_change: "Update project constraints document and INDEX.md version registry."
+  tech_stack_change: "Update project docs; review whether existing docs are still accurate."
+  directory_restructure: "Update all routing references in INDEX.md and agent entry files."
 ```
 
 ### What to Update
@@ -201,13 +195,13 @@ update_triggers:
 decision_tree:
   question: "Does the change affect what an AI agent needs to know?"
   yes:
-    action: "Update the relevant AI-facing document."
-    check: "Is the information already in PROJECT.md, or does it need a task-specific file?"
-    in_project_md: "Update PROJECT.md (stay under 800 tokens)."
-    needs_own_file: "Create or update documents/agents/<topic>.md and add routing from PROJECT.md."
+    action: "Update the relevant document under documents/."
+    check: "Is the information already in an existing file, or does it need a new file?"
+    existing_file: "Update the file and bump its version."
+    new_file: "Create the file, register it in INDEX.md, and add routing."
   no:
-    action: "Update only human-facing docs (documents/users/) or README.md if needed."
-    ai_docs: "Leave AI-facing docs unchanged."
+    action: "Update docs-jp/ if human-facing content is affected."
+    ai_docs: "Leave documents/ unchanged."
 ```
 
 ### Update Discipline
@@ -216,9 +210,33 @@ decision_tree:
 rules:
   - "Change-triggered: update documents when the code changes, not on a schedule."
   - "Proportional: a one-line code fix does not require a full documentation review."
-  - "Routing-first: if you add a new document, add its routing reference in PROJECT.md or the agent entry file."
-  - "Token-check: if an update pushes a file over its token limit, split it — do not let it grow unbounded."
+  - "Routing-first: if you add a new document, register it in INDEX.md."
+  - "Accuracy-first: if an update makes a document inaccurate, fix the inaccuracy — do not leave stale information."
   - "SSOT-check: if you add information, verify it does not duplicate an existing document. Link instead of duplicating."
+```
+
+---
+
+## Version Bumping Workflow
+
+```yaml
+when_to_bump:
+  major: "Structural change — file added, removed, renamed, or routing significantly changed"
+  minor: "Content addition or significant update — new section, new information"
+  patch: "Small fix — typo, clarification, minor correction"
+
+how_to_bump:
+  1: "Update the document's version header (document_version, last_updated_commit, last_updated_date)."
+  2: "Update the corresponding entry in documents/INDEX.md version registry."
+  3: "Record the git commit hash of the commit that includes the update."
+  4: "Use the appropriate commit message prefix (see FILE_AND_STRUCTURE.md → Git Commit Conventions)."
+
+example:
+  document: "documents/project/architecture.md"
+  change: "Added a new section about caching strategy"
+  version_bump: "1.0.0 → 1.1.0 (minor — content addition)"
+  commit_message: "feat: アーキテクチャドキュメントにキャッシュ戦略セクションを追加"
+  index_update: "Update version to 1.1.0 and last_updated_commit to the new commit hash"
 ```
 
 ---
@@ -227,22 +245,22 @@ rules:
 
 ```yaml
 question_1: "Does an AI agent need this information during development?"
-  no: "Place in documents/users/ (human-facing) or README.md."
+  no: "Place in docs-jp/ (human-facing)."
   yes: "Continue to question 2."
 
-question_2: "Is it project-level context (overview, tech stack, constraints, status)?"
-  yes: "Place in PROJECT.md (if under 800 tokens) or extract a summary + link."
+question_2: "Is it project-level context (overview, architecture, constraints, status)?"
+  yes: "Place in documents/project/<topic>.md."
   no: "Continue to question 3."
 
-question_3: "Is it a shared specification or schema (API, data model)?"
-  yes: "Place in documents/ (shared root)."
+question_3: "Is it reference material (specs, schemas, standards, examples)?"
+  yes: "Place in documents/reference/<topic>.md."
   no: "Continue to question 4."
 
-question_4: "Is it task-specific AI-facing detail (workflow, optimization guide, development standard)?"
-  yes: "Place in documents/agents/<topic>.md."
+question_4: "Is it a topic-specific concern that needs its own directory?"
+  yes: "Create documents/<topic>/ and place files there."
   no: "Re-evaluate — it may be human-facing after all."
 
-anti_pattern: "Do not create a new file for every small piece of information. Prefer extending an existing file with a new section + routing update."
+anti_pattern: "Do not create a new file for every small piece of information. Prefer extending an existing file with a new section + INDEX.md routing update."
 ```
 
 ---
@@ -259,15 +277,15 @@ must_re_read:
   - "Adopting this strategy in an existing project (brownfield)."
 
 should_re_read:
-  - "Adding a new agent entry file (e.g., project starts using a new AI tool)."
+  - "Adding a new agent entry file."
   - "Restructuring documents (moving files between directories)."
   - "Changing the project from single to hierarchical (or vice versa)."
   - "Uncertainty about where a piece of information belongs."
 
 no_re_read_needed:
   - "Routine content updates within an existing file."
-  - "Adding a new task-specific document in an established directory."
-  - "Updating constraints or status in PROJECT.md."
+  - "Adding a new document in an established directory."
+  - "Updating constraints or status in an existing project document."
 ```
 
 ---
@@ -277,23 +295,9 @@ no_re_read_needed:
 Before changing the documentation structure, assess the impact.
 
 ```yaml
-L0_internal: "Updating content within an existing file (no structural change) — proceed."
-L1_local: "Adding a new task-specific file in an existing directory — proceed and report."
-L2_structural: "Moving files between directories, changing routing paths, renaming files — proceed only if clearly implied by the task; report explicitly."
-L3_breaking: "Changing the project from single to hierarchical, removing an agent entry file, or restructuring the entire documents/ tree — MUST confirm before implementation."
-rule: "When in doubt, ask the user. Structural changes to documentation affect every future AI agent session."
-```
-
----
-
-## Operational Guidelines
-
-```yaml
-version_control: "Documents are managed in git alongside source code."
-atomicity: "Documentation must stay atomic — all related documents are updated together in one commit. Do NOT split documentation updates across branches; a branch with different documentation state from the main branch is a defect, not a feature."
-no_branch_for_docs: "Do NOT create branches for documentation-only changes. Commit directly to the working branch. Branching is a code-development concern (see design-principles AI_WORKFLOW.md), not a documentation concern."
-update_frequency: "Change-triggered — update documents when the code or architecture changes."
-maintenance: "Review documentation during code review. If a PR changes architecture, it should also update PROJECT.md."
-document_sync: "The AI agent's constraint 'update_related_documents_when_changing_project' enforces this."
-reporting: "When updating documents, report what changed, why, and whether any routing references were updated."
+L0_content: "Updating content within an existing file (no structural change) — proceed."
+L1_additive: "Adding a new file in an existing directory — proceed and report."
+L2_structural: "Moving files, changing routing paths, renaming files — proceed only if clearly implied by the task; report explicitly."
+L3_breaking: "Removing a document, restructuring the entire documents/ tree, changing project from single to hierarchical — MUST confirm before implementation."
+rule: "When in doubt, ask the user. Structural changes affect every future AI agent session."
 ```

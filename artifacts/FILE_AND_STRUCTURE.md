@@ -1,271 +1,309 @@
-# File Roles & Directory Structure - AI Agent Reference
+# File Roles & Directory Structure
 
 ```yaml
 document_type: "file_and_structure"
 target_audience: "ai_agents"
-optimization: "structural_consistency"
 language: "english"
-scope: "file roles, token limits, format standards, directory layout, hierarchy rules"
+strategy_version: "2.0.0"
+scope: "file roles, directory layout, versioning, git conventions, hierarchy"
 ```
-
-This document owns the **physical realization of the documentation strategy**:
-what each file does, how large it may be, where it lives, and how projects are
-structured — including hierarchical (multi-service) projects.
 
 ```yaml
 ownership_split:
-  this_doc: "HOW + WHERE — file roles, token limits, format, directory layout, hierarchy"
-  DOCUMENTATION_PHILOSOPHY.md: "WHY — AI-agent priority, token optimization, SSOT, universality"
-  DOCUMENT_WORKFLOW.md: "FLOW — setup, update, brownfield, re-read triggers"
+  this_doc: "HOW + WHERE — file roles, directory layout, versioning, git conventions, hierarchy"
+  DOCUMENTATION_PHILOSOPHY.md: "WHY — accuracy priority, scope, git as recording"
+  DOCUMENT_WORKFLOW.md: "FLOW — setup, update, version bumping, brownfield"
   INDEX.md: "routes to all of the above"
-rule: "Do not duplicate the principles or the workflow here; link to the owning doc."
 ```
 
 ---
 
-## 1. File Role Definitions
+## 1. Top-Level Directory Layout
+
+```yaml
+project_root:
+  documents: "AI-facing documentation (all content under here is for AI agents)"
+  docs-jp: "Human-facing documentation (Japanese, for project owners and developers)"
+  artifacts: "Exported strategy files (this set) — copied into target projects"
+  CLAUDE_md: "Claude Code entry point (project root)"
+  AGENTS_md: "Devin / Codex entry point (project root)"
+  GEMINI_md: "Gemini entry point (project root, if used)"
+  README_md: "Brief human-facing project description (points to docs-jp/ for details)"
+```
+
+### documents/ — AI-Facing
+
+```yaml
+rule: "Everything under documents/ is written for AI agents to read."
+language: "English by default. Japanese is allowed when the AI agent needs Japanese context (e.g., Japanese API specs, Japanese domain terms)."
+structure:
+  - "documents/INDEX.md — routing hub + version registry (required)"
+  - "documents/project/ — project-level context (overview, architecture, constraints)"
+  - "documents/reference/ — reference materials (specs, standards, examples)"
+  - "documents/<topic>/ — topic-specific directories as needed"
+principle: "Split by concern, not by audience. There is no audience split inside documents/ — it is all AI-facing."
+```
+
+### docs-jp/ — Human-Facing
+
+```yaml
+rule: "Human-facing content lives here, never under documents/."
+language: "Japanese"
+naming: "descriptive.md or descriptive_JP.md"
+content_examples:
+  - "Project background and motivation"
+  - "Setup tutorials for human developers"
+  - "Design rationale and decision records"
+  - "Japanese translations of AI-facing documents (for human review)"
+```
+
+---
+
+## 2. File Roles
+
+### documents/INDEX.md (Required)
+
+```yaml
+purpose: "Routing hub + document version registry"
+placement: "documents/INDEX.md"
+required: true
+content:
+  - "Document inventory: every file under documents/ with its purpose"
+  - "Routing map: which document to read for which task"
+  - "Version registry: each document's version + last-updated git commit hash"
+  - "Cross-reference map: which documents link to which"
+```
+
+See §4 "Document Versioning System" for the version registry format.
 
 ### Agent Entry Files (CLAUDE.md, AGENTS.md, GEMINI.md)
 
 ```yaml
-purpose: "AI agent entry point — routes the agent to the right context"
-token_limit: 200
+purpose: "AI agent entry point — routes to documents/INDEX.md"
 placement: "project root (one per agent tool)"
-one_per_tool:
-  CLAUDE_md: "Claude Code entry point"
-  AGENTS_md: "Devin / Codex entry point"
-  GEMINI_md: "Gemini entry point"
-```
-
-**Priority structure within the file:**
-
-```yaml
-high_priority:
-  - "role and responsibility scope"
-  - "immediate action guidelines"
-  - "critical constraints and prohibitions"
-  - "routing to PROJECT.md"
-  - "task-specific document guidance"
-medium_priority:
-  - "frequently used information (direct inclusion to save a lookup)"
-  - "cost optimization processing guidelines"
-  - "unnecessary processing avoidance criteria"
-```
-
-**Critical design considerations:**
-- Information density must be maximized within the token limit.
-- The file must define an emergency action (what to do if other docs are unavailable).
-- The file routes; it does not explain. Detail lives in PROJECT.md and below.
-- A fallback strategy is required: minimum essential information for initial access.
-
-**When to create vs skip an agent file:**
-- Create one for each AI tool the project actually uses.
-- Do NOT create agent files for tools the project does not use (YAGNI).
-- If only one tool is used, create only that file. The structure scales.
-
-### PROJECT.md
-
-```yaml
-purpose: "project description and routing — the agent's second stop"
-token_limit: 800
-placement: "documents/ (root shared) or documents/agents/ (see Directory Structure)"
-routing_responsibility: true
 content:
-  - "project overview and objectives"
-  - "tech stack and architecture"
-  - "constraints and business rules"
-  - "current status and progress"
-  - "routing to task-specific documents"
+  - "role: the agent's responsibility in this project"
+  - "constraints: project-specific rules"
+  - "emergency_action: what to do if intent is unclear"
+  - "routing: documents/INDEX.md as primary reference"
+  - "focus_files: glob patterns the agent should prioritize"
+  - "current_priority: the current development focus"
+design_rule: "The entry file routes; it does not explain. Detail lives under documents/."
+when_to_create: "One file per AI tool the project actually uses. Do not create files for unused tools (YAGNI)."
 ```
 
-**Why 800 tokens:** enough for a single AI processing pass that gives the agent
-project-level context without exceeding typical context-window efficiency
-thresholds. Larger than 800 → split into task-specific files and route to them.
+### Project Documents (documents/project/)
+
+```yaml
+purpose: "Project-level context the AI agent needs for every task"
+placement: "documents/project/"
+content_examples:
+  - "Project overview, objectives, scope"
+  - "Architecture summary"
+  - "Constraints (business rules, compliance, performance)"
+  - "Current status and roadmap"
+routing_rule: "INDEX.md routes to these files. Each file covers one concern."
+```
+
+### Reference Documents (documents/reference/)
+
+```yaml
+purpose: "Reference material the agent reads on demand"
+placement: "documents/reference/"
+content_examples:
+  - "API specifications, data models, schemas"
+  - "Coding standards specific to the project"
+  - "Example projects demonstrating the strategy"
+  - "Glossary, domain terms"
+routing_rule: "Project documents and INDEX.md link to these when needed. The agent does not read them unless a task requires it."
+```
 
 ### README.md
 
 ```yaml
-purpose: "human interface only — the one human-readable exception"
-token_limit: none
+purpose: "Brief human-facing project description"
 placement: "project root"
-content:
-  - "basic project information"
-  - "setup and usage"
-  - "contribution guidelines"
-  - "project background"
-audience: "human developers, not AI agents"
-```
-
-**Rule:** AI agents should NOT rely on README.md for project context. It is
-human-facing and may contain prose, tutorials, and background that waste tokens.
-The agent entry files and PROJECT.md are the AI's context path.
-
----
-
-## 2. Token Limits
-
-```yaml
-limits:
-  agent_entry_files: 200
-  PROJECT_md: 800
-  task_specific_docs: "no hard limit, but prefer splitting over 800"
-  README_md: "none (human-facing exception)"
-rationale:
-  "200": "entry files route, they do not explain. 200 tokens is enough for role + constraints + routing."
-  "800": "one processing pass of project-level context. Beyond this, the agent should be routed to task-specific files."
-enforcement: "soft — exceeding by a small margin is acceptable if it prevents a file split that would hurt routing clarity. Gross violation → restructure."
+audience: "human developers, project owners"
+content: "One-paragraph project summary + pointer to docs-jp/ for details"
+rule: "AI agents should NOT rely on README.md for project context. It is human-facing."
 ```
 
 ---
 
-## 3. File Format Standards
+## 3. Cross-Reference and Routing Strategy
 
 ```yaml
-format_priority: "AI efficiency > human readability"
+routing_chain: "agent.md → documents/INDEX.md → project/ or reference/ → detail files"
+principles:
+  - "INDEX.md is the single routing hub. Every document is listed there."
+  - "Each document links to related documents instead of duplicating content."
+  - "One file = one concern. A task that touches one concern should require reading one file."
+  - "The agent follows the routing chain only as far as needed."
+  - "Cross-references use relative paths from the project root."
+```
+
+### Reference Format
+
+```yaml
+format: "markdown links with brief context"
+example: "See [documents/project/architecture.md](../project/architecture.md) for the architecture overview."
+rule: "Never duplicate content that exists elsewhere. Link to it with a one-sentence description."
+```
+
+---
+
+## 4. Document Versioning System
+
+Every document under `documents/` (except INDEX.md itself) has a version and
+tracks the git commit at which it was last updated.
+
+### Version Format
+
+```yaml
+scheme: "semantic versioning (MAJOR.MINOR.PATCH)"
+major: "Structural change — file added, removed, renamed, or routing significantly changed"
+minor: "Content addition or significant update — new section, new information"
+patch: "Small fix — typo, clarification, minor correction"
+initial_version: "1.0.0"
+```
+
+### Version Registry in INDEX.md
+
+```yaml
+# Example entry in documents/INDEX.md
+documents:
+  - path: "documents/project/overview.md"
+    version: "1.2.0"
+    last_updated_commit: "abc1234"
+    last_updated_date: "2024-07-09"
+    purpose: "Project overview and objectives"
+  - path: "documents/project/architecture.md"
+    version: "1.0.0"
+    last_updated_commit: "def5678"
+    last_updated_date: "2024-07-09"
+    purpose: "Architecture summary"
+```
+
+### Per-Document Header
+
+Each document includes a version header at the top:
+
+```yaml
+# At the top of each document file
+---
+document_version: "1.2.0"
+last_updated_commit: "abc1234"
+last_updated_date: "2024-07-09"
+---
+```
+
+### Why Track Commit Hash
+
+```yaml
+rationale: |
+  When an AI agent reads a document, it can check the commit hash to verify
+  whether the document reflects the current state of the code. If the document's
+  last_updated_commit is behind HEAD, the agent knows the document may be stale
+  and should be verified against the code before relying on it.
+```
+
+---
+
+## 5. Git Commit Message Conventions
+
+Documentation commits use Conventional Commits prefixes with Japanese descriptions.
+
+### Format
+
+```yaml
+format: "<type>: <Japanese description>"
+types:
+  docs: "Documentation changes (new file, content update, routing change)"
+  feat: "New documentation feature (new section, new versioning entry)"
+  fix: "Documentation fix (correcting inaccurate information)"
+  refactor: "Documentation restructuring (moving files, reorganizing sections)"
+  chore: "Maintenance (version bump, metadata update)"
+examples:
+  - "docs: プロジェクト概要を更新"
+  - "fix: API仕様のエンドポイントURLを修正"
+  - "refactor: documents/reference/ 配下を整理"
+  - "feat: セキュリティ要件ドキュメントを追加"
+  - "chore: ドキュメントバージョンを1.2.0に更新"
+```
+
+### Rules
+
+```yaml
+rules:
+  - "Use Japanese for the description after the prefix."
+  - "The prefix is English (docs:, feat:, fix:, refactor:, chore:)."
+  - "Description should be concise and describe what changed, not why (the diff shows why)."
+  - "If a documentation commit accompanies a code change, the documentation commit should reference the code commit hash in its body."
+```
+
+### What We Do NOT Govern
+
+```yaml
+not_governed:
+  - "When to commit (that is a code-side / development workflow decision)"
+  - "Whether to branch (that is a code-side / development workflow decision)"
+  - "Commit size or granularity (that is a development practice decision)"
+```
+
+---
+
+## 6. File Format Standards
+
+```yaml
 base_format: "markdown with embedded YAML blocks"
-processing_efficiency: "maximum AI parsing speed"
-```
-
-### Format Selection Guide
-
-```yaml
-structured_data: "YAML (settings, metadata, lists, configuration)"
-explanations: "markdown (procedures, guides, rationale)"
-api_specs: "JSON (OpenAPI, machine-readable schemas)"
-mixed: "markdown + YAML blocks (most efficient — structure + context in one file)"
-```
-
-### Format Usage by File Type
-
-```yaml
-agent_entry_files: "structured markdown with YAML blocks"
-PROJECT_md: "markdown with YAML sections"
-documents: "markdown / YAML / JSON (flexible — choose by content)"
-README_md: "standard markdown (human-facing exception — prose allowed)"
+format_selection:
+  structured_data: "YAML (settings, metadata, version registries, lists)"
+  explanations: "markdown (procedures, guides, rationale)"
+  api_specs: "JSON or YAML (OpenAPI, machine-readable schemas)"
+  mixed: "markdown + YAML blocks (structure + context in one file)"
+naming: "lowercase, hyphen-separated for files; directories are lowercase"
 ```
 
 ---
 
-## 4. Directory Structure
+## 7. Hierarchical Projects
 
-### Single Project
+For multi-service or multi-package projects, each child has an independent
+`documents/` tree. The parent does not enter children's trees.
 
-```yaml
-project_structure:
-  root_files:
-    - "CLAUDE.md      # ≤200 tokens (Claude Code entry)"
-    - "AGENTS.md      # ≤200 tokens (Devin/Codex entry)"
-    - "GEMINI.md      # ≤200 tokens (Gemini entry, if used)"
-    - "README.md      # human interface only"
-  documents:
-    root: "documents/ — shared specifications and schemas"
-    agents: "documents/agents/ — AI-optimized documentation (English, no suffix)"
-    users: "documents/users/ — human-readable documentation (Japanese, _JP.md suffix)"
-  source_code: true
-```
-
-### Directory Responsibilities
+### Principles
 
 ```yaml
-"documents/":
-  content: "shared specifications, schemas, APIs"
-  audience: "both AI agents and humans"
-  language: "context-dependent (technical specs often English)"
-  naming: "descriptive.md or descriptive.json"
-
-"documents/agents/":
-  content: "project details, workflows, optimization guides for AI"
-  audience: "AI agents only"
-  language: "English (processing efficiency)"
-  naming: "descriptive.md (no language suffix)"
-  optimization: "token efficiency priority"
-
-"documents/users/":
-  content: "setup guides, explanations, tutorials for humans"
-  audience: "human developers"
-  language: "Japanese (primary target language)"
-  naming: "descriptive_JP.md (language suffix required)"
-  optimization: "comprehensibility priority"
-```
-
-### Reference & Routing Strategy
-
-```yaml
-ai_workflow: "agent.md → documents/agents/project.md → task-specific files"
-human_workflow: "README.md → documents/users/setup_JP.md → detailed guides"
-shared_specs: "both reference documents/ for API specs, schemas, standards"
-gradual_disclosure: "agent.md → PROJECT.md → documents/agents/ → documents/ (shared specs)"
-lost_prevention: "clear directory purpose prevents confusion — each directory has one role"
-```
-
----
-
-## 5. Hierarchical Projects (OOP Design)
-
-For multi-service or multi-package projects, apply OOP-style encapsulation to
-the documentation structure.
-
-### Hierarchy Principles
-
-```yaml
-child_independence: "complete independence — child does not know parent exists"
-parent_containment: "parent manages all child project information"
-information_flow: "parent → child (unidirectional only)"
-external_reference: "child treats parent as external project if coordination needed"
-encapsulation: "child does not know parent implementation details"
-oop_analogy: "similar to object-oriented class containment design"
+child_independence: "Each child has its own documents/INDEX.md and version registry."
+parent_containment: "Parent's documents/ describes children at a high level but does not duplicate child details."
+information_flow: "Parent → child (unidirectional). Child does not reference parent's internal documents."
+external_reference: "If a child needs parent context, it treats the parent as an external project."
 ```
 
 ### Structure
 
 ```yaml
 parent_project:
-  files: ["CLAUDE.md", "AGENTS.md", "GEMINI.md", "README.md"]
   documents:
-    shared_root: "documents/ (shared specifications)"
-    agents: "documents/agents/ (parent project AI docs)"
-    users: "documents/users/ (parent project human docs)"
-    child_management: "documents/agents/children.md (child project coordination)"
+    index: "documents/INDEX.md (parent's routing + version registry)"
+    project: "documents/project/ (parent project context)"
+    reference: "documents/reference/ (shared reference, child-overview)"
+    children_overview: "documents/project/children.md (high-level child descriptions, parent-only)"
 
 child_projects:
-  independence: "complete independence without parent knowledge"
-  structure:
-    files: ["CLAUDE.md", "AGENTS.md", "GEMINI.md", "README.md"]
-    documents:
-      shared_root: "documents/ (child-specific shared specs)"
-      agents: "documents/agents/ (child AI docs, parent unaware)"
-      users: "documents/users/ (child human docs, parent unaware)"
-  parent_awareness: false
-  external_reference: "treat parent as external project if coordination needed"
+  each_child:
+    documents: "Independent documents/ tree with its own INDEX.md"
+    parent_awareness: false
+    rule: "Child's INDEX.md does not list parent documents. Child is self-contained."
 ```
 
 ### Parent's children.md
 
-The parent project maintains a coordination file at `documents/agents/children.md`
-that lists child projects, their boundaries, and inter-service communication
-patterns. This file is parent-only — children do not reference it.
-
----
-
-## 6. Information Priority
-
-### AI Agent Priority Order
-
 ```yaml
-1: "agent.md (root directory entry point — CLAUDE.md / AGENTS.md / GEMINI.md)"
-2: "documents/agents/project.md (AI-specific project details)"
-3: "documents/agents/ (detailed AI-optimized information, task-specific)"
-4: "documents/ (shared specifications and schemas)"
-5: "README.md (human interface — last resort, not designed for AI)"
-```
-
-### Human Priority Order
-
-```yaml
-1: "README.md (human entry point)"
-2: "documents/users/setup_JP.md (setup and getting started)"
-3: "documents/ (shared specifications when needed)"
-4: "documents/users/ (detailed human-readable guides)"
+placement: "documents/project/children.md"
+purpose: "High-level overview of child projects — names, boundaries, responsibilities, inter-service communication"
+audience: "parent-level AI agents only"
+rule: "Children do not reference this file. Children are unaware of each other unless explicitly coordinated."
 ```
 
 ---
@@ -273,9 +311,10 @@ patterns. This file is parent-only — children do not reference it.
 ## How These Interlock
 
 ```yaml
-entry_file_routes: "agent.md defines role + routes to PROJECT.md"
-project_file_routes: "PROJECT.md gives context + routes to task-specific docs"
-directory_purpose_routes: "documents/agents/ vs documents/users/ vs documents/ — audience decides placement"
-hierarchy_encapsulates: "parent and child each have independent doc trees; coordination via children.md (parent-only)"
-one_idea: "Make the entry file the router, PROJECT.md the context, and directories the audience boundary. Hierarchy repeats this pattern per level."
+entry_file_routes: "agent.md routes to documents/INDEX.md"
+index_routes: "INDEX.md routes to project/ or reference/ based on the task"
+version_registry: "INDEX.md tracks every document's version + commit hash for staleness detection"
+cross_references: "Documents link to each other instead of duplicating content"
+hierarchy: "Parent and child each have independent documents/ trees; coordination via parent's children.md"
+one_idea: "INDEX.md is the map, documents are the destinations, version headers are the timestamps. The agent reads the map, picks a destination, and follows links only as far as needed."
 ```

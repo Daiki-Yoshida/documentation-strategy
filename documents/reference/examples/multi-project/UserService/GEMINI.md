@@ -11,10 +11,10 @@ constraints:
 emergency_action: "stop_review_and_request_clarification_if_unclear"
 
 ## Routing Information (Priority: High)
-primary_ref: "documents/agents/project.md (service details)"
+primary_ref: "documents/INDEX.md (routing hub)"
 task_routing:
-  - "before_review: documents/agents/project.md"
-  - "authentication_review: documents/agents/authentication.md"
+  - "service_overview: documents/project/overview.md"
+  - "authentication: documents/project/authentication.md"
 
 ## Efficiency Configuration (Priority: Medium)
 focus_files: ["src/**/*.cs", "tests/**/*.cs", "appsettings*.json"]
