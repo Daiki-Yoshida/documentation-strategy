@@ -1,85 +1,83 @@
-# AIエージェント ドキュメント戦略 - 索引
+# ドキュメント戦略 - 索引
 
 ```yaml
 document_type: "index"
 target_audience: "ai_agents"
-optimization: "token_efficiency"
 language: "english"
-role: "エクスポートされたドキュメント戦略セットの入口"
+role: "エクスポートされたドキュメント戦略アーティファクトセットの入口"
+strategy_version: "2.1.0"
 ```
 
 > **注**: このファイルは `artifacts/INDEX.md` の日本語訳です。AIエージェントが読むべき正式版は `artifacts/INDEX.md`（英語）です。この翻訳は人間による内容確認用です。
 
-本ファイルはエクスポートされたガイダンスの入口です。最初に読んでください。
+本ファイルはエクスポートされた戦略の入口です。最初に読んでください。
 
 ## 読む順序
 
 ```yaml
-1_philosophy: "DOCUMENTATION_PHILOSOPHY.md"   # WHY:  核心価値、AIエージェント優先、トークン最適化、誤読防止
-2_structure:  "FILE_AND_STRUCTURE.md"         # HOW+WHERE: ファイル役割、トークン制限、ディレクトリ配置、階層
-3_workflow:   "DOCUMENT_WORKFLOW.md"           # FLOW: セットアップ、更新、ブラウンフィールド、再読み込みトリガー
+1_philosophy: "DOCUMENTATION_PHILOSOPHY.md"   # WHY:  正確性優先、スコープ、記録としてのgit、design-principlesとの関係
+2_structure:  "FILE_AND_STRUCTURE.md"         # HOW+WHERE: ファイル役割、ディレクトリ配置、バージョニング、git規約、階層、削除
+3_workflow:   "DOCUMENT_WORKFLOW.md"           # FLOW: セットアップ、更新、ブラウンフィールド、陳腐化対応、バージョンbump、削除
 ```
 
-初回接触時は 1 → 2 → 3 の順に読む。特定のタスクの場合は、以下のクイックタスクルーティングから該当箇所へジャンプする。
-
-## ドキュメント分割方針
-
-```yaml
-split_by: "各ドキュメントが答える質問 — WHY（哲学）/ HOW+WHERE（ファイル役割と構造）/ FLOW（ワークフロー）; INDEXがルーティングする。"
-one_owner: "各概念は正確に1つのドキュメントに存在する — Ownership Mapを参照; 複製せずリンクする。"
-restatement_cap: "あるドキュメントが所有していない概念が必要な場合、最大1文の再述 + 所有者へのリンクのみ許可される。ドキュメント間に矛盾が生じた場合、所有ドキュメントの記述が権威である。"
-not_split_by: ["audience", "language", "feature/domain"]   # 全ドキュメントはAI向け、英語
-```
+初回接触時は 1 → 2 → 3 の順に読む。特定のタスクの場合は、クイックタスクルーティングから該当箇所へジャンプする。
 
 ## 基礎レンズ
 
-本アーティファクト群は **AIエージェント優先** パラダイムを前提としている。
+これらのアーティファクトは **正確性第一・ルーティング駆動** のドキュメントパラダイムを前提としている。
 
 ```yaml
-core_idea: "ドキュメントは、AIエージェントが最小のトークンコストで正しいコンテキストを見つけられるように構造化される。人間向けドキュメントは別の明確にスコープされた関心事であり、デフォルトではない。"
-interpret_through: ["トークン効率", "認知負荷削減", "唯一の情報源", "ルーティング明確性"]
-do_not_optimize_for: ["人間の可読性（READMEを除く）", "冗長な散文", "重複する説明"]
-scale_invariant: "本戦略は単一プロジェクトと階層的（マルチサービス）プロジェクトの双方に適用される。"
+core_idea: "ドキュメントはAIエージェントに正確な情報を適切なタイミングで提供する。トークン効率はファイル構造とルーティングによって達成され、情報の切り詰めによることはない。"
+priority: "正確性 > ルーティング > トークン効率"
+scope: "documents/ のみ — コード設計ではなく、gitのタイミングではなく、ブランチングではない"
+audience: "documents/ は完全にAI向け。人間向けコンテンツは docs-jp/ に置く"
+recording: "Gitは記録ツールである — コミットメッセージの形式とバージョン追跡を管理し、コミットのタイミングは管理しない"
 ```
 
 ## Ownership Map（唯一の情報源）
 
-各概念は正確に1つの権威ドキュメントを持つ。複製せずリンクすること。
+各概念は正確に1つのドキュメントに存在する。複製せずリンクすること。
 
 ```yaml
 DOCUMENTATION_PHILOSOPHY.md:
   owns:
-    - "AIエージェント優先: 定義と根拠"
-    - "トークン最適化: 原則（WHY）"
-    - "認知負荷削減: 原則（WHY）"
-    - "唯一の情報源 / 重複排除: 原則（WHY）"
-    - "汎用性: 単一および階層プロジェクト、あらゆる規模"
-    - "フォーマット優先順位: AI効率 > 人間の可読性（WHY）"
-    - "誤読防止"
-    - "design-principlesとの関係: ドメイン境界、共有概念、意図的な相違、同時読みガイダンス"
+    - "情報の正確性を最優先（正確性 > トークン効率）"
+    - "スコープ境界: documents/ のみ、コードではない"
+    - "記録ツールとしてのGit（原則、タイミングではない）"
+    - "デフォルトでAI向け。人間向けは別の関心事"
+    - "切り詰めよりルーティング: ファイルを分割し、情報を縮小しない"
+    - "design-principlesとの関係（ドメイン境界、使用パターン、同時読みガイダンス）"
+    - "よくある誤読"
 
 FILE_AND_STRUCTURE.md:
   owns:
-    - "エージェントエントリファイル（CLAUDE.md, AGENTS.md, GEMINI.md）: 役割、トークン制限、優先度構造"
-    - "PROJECT.md: 役割、トークン制限、ルーティング責務"
-    - "README.md: 人間専用インターフェースとしての役割"
-    - "トークン制限: 200 / 800 とその根拠"
-    - "ファイルフォーマット標準: markdown + YAMLブロック、フォーマット選択ガイド"
-    - "ディレクトリ構造: documents/, documents/agents/, documents/users/"
-    - "ディレクトリごとの言語・命名規約"
-    - "階層プロジェクト: OOP設計、子の独立性、親の包含"
-    - "情報優先順位（AIおよび人間）"
-    - "ファイル間の参照・ルーティング戦略"
+    - "documents/ ディレクトリ: 全てAI向け"
+    - "docs-jp/ ディレクトリ: 人間向け（日本語）"
+    - "INDEX.md の役割: ルーティングハブ + ドキュメントバージョンレジストリ"
+    - "ファイル役割: エージェントエントリファイル、INDEX.md、プロジェクトドキュメント、参照ドキュメント"
+    - "ドキュメントバージョニングシステム: セマンティックバージョン + gitコミットハッシュ"
+    - "二段階コミットハッシュワークフロー"
+    - "陳腐化検出の実践（git log コマンド）"
+    - "INDEX.md のバージョンbump（index_version）"
+    - "ドキュメント用のgitコミットメッセージ規約"
+    - "相互参照・ルーティング戦略（相対パス）"
+    - "ディレクトリ分割ガイド（三の法則）"
+    - "階層プロジェクト（親子ドキュメント）"
+    - "ドキュメント削除ルール"
+    - "複数開発者によるINDEX.md競合の緩和"
+    - "ファイルフォーマット標準"
 
 DOCUMENT_WORKFLOW.md:
   owns:
-    - "新規プロジェクトセットアップ: 戦略からプロジェクトファイルまでのステップバイステップ"
-    - "既存プロジェクト導入（ブラウンフィールド）: 監査、分類、移行"
-    - "継続的ドキュメント更新: いつ更新するか、何を再読み込みするか"
-    - "再読み込みトリガー: AIエージェントが本戦略を再読み込みすべきタイミング"
-    - "ドキュメント作成デシジョンツリー: 新規ファイル作成 vs 既存拡張の判断"
-    - "運用ガイドライン: バージョン管理、更新頻度、保守"
-    - "確認ゲート: ドキュメント構造を変更する前にユーザーに確認すべきタイミング"
+    - "新規プロジェクトセットアップ: ステップバイステップ"
+    - "ブラウンフィールド導入: 監査、分類、移行"
+    - "継続的ドキュメント更新"
+    - "陳腐化対応: 検出、分類、更新フロー"
+    - "バージョンbumpワークフロー（二段階コミット）"
+    - "ドキュメント作成デシジョンツリー"
+    - "ドキュメント削除ワークフロー"
+    - "再読み込みトリガー"
+    - "確認ゲート（L0–L3）"
 ```
 
 ## クイックタスクルーティング
@@ -88,12 +86,17 @@ DOCUMENT_WORKFLOW.md:
 "新規プロジェクトのドキュメントをセットアップ":           "DOCUMENT_WORKFLOW.md（新規プロジェクトセットアップ）+ FILE_AND_STRUCTURE.md（ファイル役割）"
 "既存プロジェクトに本戦略を導入":                         "DOCUMENT_WORKFLOW.md（ブラウンフィールド導入）"
 "既存ドキュメントを更新":                                 "DOCUMENT_WORKFLOW.md（継続的更新）+ FILE_AND_STRUCTURE.md（適切なファイルを見つける）"
-"新規ドキュメントを作成すべきか既存を拡張すべきか":       "DOCUMENT_WORKFLOW.md（作成デシジョンツリー）"
-"この情報はどのファイルに置くべきか":                     "FILE_AND_STRUCTURE.md（ファイル役割定義）+ DOCUMENTATION_PHILOSOPHY.md（SSOT）"
+"ドキュメントが陳腐化している（HEADより遅れている）":     "DOCUMENT_WORKFLOW.md（陳腐化対応）+ FILE_AND_STRUCTURE.md（陳腐化検出）"
+"ドキュメントのバージョンをbumpする":                     "DOCUMENT_WORKFLOW.md（バージョンbump）+ FILE_AND_STRUCTURE.md（バージョニングシステム）"
+"更新後にコミットハッシュを記録する":                     "DOCUMENT_WORKFLOW.md（二段階コミット）+ FILE_AND_STRUCTURE.md（コミットハッシュワークフロー）"
+"ドキュメントのgitコミットメッセージを書く":              "FILE_AND_STRUCTURE.md（gitコミット規約）"
+"この情報はどのファイルに置くべきか":                     "FILE_AND_STRUCTURE.md（ファイル役割定義）"
+"新規ディレクトリを作成すべきか":                         "FILE_AND_STRUCTURE.md（ディレクトリ分割ガイド）"
 "マルチサービスプロジェクトの構造化方法":                 "FILE_AND_STRUCTURE.md（階層プロジェクト）"
-"特定ファイルのトークン制限":                             "FILE_AND_STRUCTURE.md（トークン制限）"
-"どのフォーマットを使うべきか（YAML/JSON/Markdown）":     "FILE_AND_STRUCTURE.md（ファイルフォーマット標準）"
+"documents/INDEX.md のセットアップ":                     "FILE_AND_STRUCTURE.md（INDEX.mdの役割）+ DOCUMENT_WORKFLOW.md（新規プロジェクトセットアップ）"
+"ドキュメントを削除する":                                 "DOCUMENT_WORKFLOW.md（ドキュメント削除）+ FILE_AND_STRUCTURE.md（ドキュメント削除ルール）"
+"ドキュメントを二つに分割する":                           "FILE_AND_STRUCTURE.md（ディレクトリ分割ガイド）+ DOCUMENT_WORKFLOW.md（バージョンbump）"
 "いつ本戦略を再読み込みすべきか":                         "DOCUMENT_WORKFLOW.md（再読み込みトリガー）"
-"なぜREADMEだけが人間向けなのか":                         "DOCUMENTATION_PHILOSOPHY.md（AIエージェント優先 + 誤読防止）"
+"本戦略は何を管理対象とするか":                           "DOCUMENTATION_PHILOSOPHY.md（スコープ境界）"
 "design-principlesとの関係":                              "DOCUMENTATION_PHILOSOPHY.md（design-principlesとの関係）"
 ```
