@@ -5,8 +5,8 @@ document_type: "index"
 target_audience: "ai_agents"
 language: "english"
 project: "documentation-strategy"
-index_version: "2.0.0"
-last_updated_commit: "92787f4"
+index_version: "2.1.0"
+last_updated_commit: "d94a6a7"
 last_updated_date: "2025-07-09"
 ```
 
@@ -37,6 +37,12 @@ documents:
     last_updated_date: "2025-07-09"
     purpose: "Design notes for the documentation strategy itself"
 
+  - path: "documents/reference/REVIEW_INSTRUCTIONS.md"
+    version: "1.0.0"
+    last_updated_commit: "d94a6a7"
+    last_updated_date: "2025-07-09"
+    purpose: "Self-contained review prompt for AI agents to review artifacts/"
+
   - path: "documents/reference/examples/"
     version: "2.0.0"
     last_updated_commit: "92787f4"
@@ -52,6 +58,7 @@ documents:
 task_routing:
   "understand the repository layout": "documents/project/REPOSITORY_STRUCTURE.md"
   "understand the strategy design rationale": "documents/reference/AI_DOC_STRATEGY_DESIGN.md"
+  "review artifacts/": "documents/reference/REVIEW_INSTRUCTIONS.md"
   "see example projects": "documents/reference/examples/"
   "understand the strategy itself": "artifacts/INDEX.md (exported strategy — read this first)"
   "human-facing project overview (Japanese)": "docs-jp/PROJECT_OVERVIEW_JP.md"
@@ -86,6 +93,9 @@ references:
     linked_from: ["documents/INDEX.md"]
   documents/reference/AI_DOC_STRATEGY_DESIGN.md:
     links_to: []
+    linked_from: ["documents/INDEX.md"]
+  documents/reference/REVIEW_INSTRUCTIONS.md:
+    links_to: ["artifacts/INDEX.md", "artifacts/DOCUMENTATION_PHILOSOPHY.md", "artifacts/FILE_AND_STRUCTURE.md", "artifacts/DOCUMENT_WORKFLOW.md"]
     linked_from: ["documents/INDEX.md"]
   documents/reference/examples/:
     links_to: []
